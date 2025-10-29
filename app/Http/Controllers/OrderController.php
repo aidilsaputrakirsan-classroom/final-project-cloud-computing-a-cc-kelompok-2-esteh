@@ -23,23 +23,19 @@ class OrderController extends Controller
     {
         $user = Auth::user();
 
-        // Ambil atau buat order pending
         $order = Order::firstOrCreate(
             ['user_id' => $user->id, 'status' => 'pending'],
             ['total' => 0]
         );
 
-        // Pastikan item ada di order_items
         $orderItem = $order->items()->firstOrCreate(
             ['product_id' => $product->id],
             ['quantity' => 0, 'price' => $product->price]
         );
 
-        // Tambahkan quantity
         $orderItem->quantity += 1;
         $orderItem->save();
 
-        // Update total order
         $order->total = $order->items()->sum(DB::raw('quantity * price'));
         $order->save();
 
@@ -49,14 +45,17 @@ class OrderController extends Controller
     // Update jumlah item
     public function update(Request $request, OrderItem $orderItem)
     {
-        $orderItem->update(['quantity' => $request->quantity]);
+        $validated = $request->validate([
+            'quantity' => 'required|integer|min:1'
+        ]);
 
-        // Update total order
+        $orderItem->update(['quantity' => $validated['quantity']]);
+
         $order = $orderItem->order;
         $order->total = $order->items()->sum(DB::raw('quantity * price'));
         $order->save();
 
-        return redirect()->back()->with('success','Jumlah item berhasil diupdate.');
+        return redirect()->back()->with('success', 'Jumlah item berhasil diupdate.');
     }
 
     // Hapus item
@@ -65,10 +64,9 @@ class OrderController extends Controller
         $order = $orderItem->order;
         $orderItem->delete();
 
-        // Update total order
         $order->total = $order->items()->sum(DB::raw('quantity * price'));
         $order->save();
 
-        return redirect()->back()->with('success','Item berhasil dihapus.');
+        return redirect()->back()->with('success', 'Item berhasil dihapus.');
     }
 }

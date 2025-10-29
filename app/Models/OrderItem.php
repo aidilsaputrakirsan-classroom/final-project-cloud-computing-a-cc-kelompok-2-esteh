@@ -13,18 +13,23 @@ class OrderItem extends Model
         'order_id',
         'product_id',
         'quantity',
-        'price'
+        'price',
     ];
 
-    // Relasi: item milik order
+    protected $casts = [
+        'quantity' => 'integer',
+        'price' => 'float',
+    ];
+
+    // Relasi: item milik satu order
     public function order()
     {
-        return $this->belongsTo(Order::class);
+        return $this->belongsTo(Order::class)->withDefault();
     }
 
-    // Relasi: item berisi produk
+    // Relasi: item berisi satu produk
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class)->withDefault();
     }
 }
