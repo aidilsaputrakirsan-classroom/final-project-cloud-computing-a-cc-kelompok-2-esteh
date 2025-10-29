@@ -9,13 +9,19 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'product_id', 'status'];
+    protected $fillable = [
+        'user_id',
+        'status',
+        'total'
+    ];
 
-    public function product()
+    // Relasi: satu order memiliki banyak item
+    public function items()
     {
-        return $this->belongsTo(Product::class);
+        return $this->hasMany(OrderItem::class);
     }
 
+    // Relasi: order milik user
     public function user()
     {
         return $this->belongsTo(User::class);

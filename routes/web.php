@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
@@ -26,17 +27,11 @@ Route::middleware('auth')->group(function () {
 // =======================
 // ADMIN ROUTES
 // =======================
-
-// Middleware admin memastikan hanya admin yang bisa akses
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('products', AdminProductController::class);
-    // nanti bisa tambahkan monitoring pesanan, kelola user, dll
+    Route::resource('users', AdminUserController::class);
+    // Nanti bisa ditambah: monitoring pesanan, laporan, dll
 });
-
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
-});
-
 
 // =======================
 // USER ROUTES
@@ -45,8 +40,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 // User bisa lihat daftar produk (menu)
 Route::middleware(['auth'])->group(function () {
     Route::get('menu', [ProductController::class, 'menu'])->name('products.menu');
-    Route::resource('orders', OrderController::class); // untuk memesan
-});
 
+    // Tambah produk ke pesanan
+    Route::post('orders/add/{product}', [OrderController::class, 'add'])->name('orders.add');
+
+    // CRUD pesanan
+    Route::get('orders', [OrderController::class,'index'])->name('orders.index');
+    Route::post('orders', [OrderController::class,'store'])->name('orders.store');
+    Route::patch('orders/{orderItem}', [OrderController::class,'update'])->name('orders.update');
+    Route::delete('orders/{orderItem}', [OrderController::class,'destroy'])->name('orders.destroy');
+});
 
 require __DIR__.'/auth.php';

@@ -10,12 +10,10 @@ class ProductController extends Controller
     /**
      * Halaman menu untuk user/pelanggan
      */
-    public function menu()
-    {
-        // Ambil semua produk terbaru
-        $products = Product::latest()->paginate(12);
+public function menu()
+{
+    $products = \App\Models\Product::all(); // ambil semua produk
+    return view('products.menu', compact('products'));
+}
 
-        // Tampilkan ke view products.menu
-        return view('products.menu', compact('products'));
-    }
 }

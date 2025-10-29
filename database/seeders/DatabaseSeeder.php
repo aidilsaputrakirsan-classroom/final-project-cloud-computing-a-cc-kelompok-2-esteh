@@ -2,24 +2,76 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\User;
+use App\Models\Product;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
      * Seed the application's database.
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // --- USERS ---
+        // Admin
+        User::create([
+            'name' => 'Admin Lokalicious',
+            'email' => 'admin@lokalicious.com',
+            'password' => bcrypt('admin123'), // ganti sesuai keinginan
+            'role' => 'admin',
         ]);
+
+        // User biasa / pelanggan
+        User::create([
+            'name' => 'User Lokalicious',
+            'email' => 'user@lokalicious.com',
+            'password' => bcrypt('user123'), // ganti sesuai keinginan
+            'role' => 'user',
+        ]);
+
+        // --- PRODUK ---
+        $products = [
+            [
+                'name' => 'Nasi Goreng Spesial',
+                'description' => 'Nasi goreng lengkap dengan telur, ayam, dan sayuran',
+                'price' => 15000,
+                'image' => null,
+            ],
+            [
+                'name' => 'Mie Ayam Bakso',
+                'description' => 'Mie ayam dengan bakso kenyal dan kuah sedap',
+                'price' => 12000,
+                'image' => null,
+            ],
+            [
+                'name' => 'Es Teh Manis',
+                'description' => 'Segelas es teh manis dingin',
+                'price' => 5000,
+                'image' => null,
+            ],
+            [
+                'name' => 'Jus Alpukat',
+                'description' => 'Jus alpukat segar dengan susu',
+                'price' => 10000,
+                'image' => null,
+            ],
+            [
+                'name' => 'Ayam Goreng Crispy',
+                'description' => 'Ayam goreng renyah dan gurih',
+                'price' => 20000,
+                'image' => null,
+            ],
+            [
+                'name' => 'Kopi Hitam',
+                'description' => 'Kopi hitam panas tanpa gula',
+                'price' => 8000,
+                'image' => null,
+            ],
+        ];
+
+        foreach ($products as $product) {
+            Product::create($product);
+        }
     }
 }
