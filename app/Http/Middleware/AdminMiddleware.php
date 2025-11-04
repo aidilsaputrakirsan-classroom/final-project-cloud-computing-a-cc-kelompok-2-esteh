@@ -3,21 +3,16 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminMiddleware
 {
-    /**
-     * Handle an incoming request.
-     */
-    public function handle(Request $request, Closure $next)
+    public function handle($request, Closure $next)
     {
-        // Pastikan user login dan role = admin
-        if (auth()->check() && auth()->user()->role === 'admin') {
-            return $next($request);
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            return redirect('/dashboard')->with('error', 'Akses hanya untuk Admin');
         }
 
-        // Jika bukan admin, redirect ke dashboard user dengan pesan
-        return redirect()->route('dashboard')->with('error', 'Akses ditolak. Anda bukan admin.');
+        return $next($request);
     }
 }

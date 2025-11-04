@@ -15,30 +15,29 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-
-                    <x-nav-link :href="route('products.menu')" :active="request()->routeIs('products.menu')">
-                        {{ __('Menu') }}
-                    </x-nav-link>
                 </div>
             </div>
 
             <!-- KERANJANG -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
 
-                <a href="{{ route('cart.index') }}" class="relative mr-6">
-                    <!-- Icon Keranjang -->
-<svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-gray-700"
-     fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-    <path stroke-linecap="round" stroke-linejoin="round"
-          d="M3 3h2l.4 2M7 13h10l1.6-8H5.4M7 13l-1.2 6h10.4M10 21a1 1 0 11-2 0 1 1 0 012 0zm8 0a1 1 0 11-2 0 1 1 0 012 0z" />
-</svg>
+@if(auth()->user()->role !== 'admin')
+    <a href="{{ route('cart.index') }}" class="relative mr-6">
+        <!-- Icon Keranjang -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-gray-700"
+             fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M3 3h2l.4 2M7 13h10l1.6-8H5.4M7 13l-1.2 6h10.4M10 21a1 1 0 11-2 0 1 1 0 012 0zm8 0a1 1 0 11-2 0 1 1 0 012 0z" />
+        </svg>
+    
+            @if($cartCount > 0)
+            <span class="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">
+                {{ $cartCount }}
+            </span>
+        @endif
+    </a>
+@endif
 
-
-                    @if($cartCount > 0)
-                        <span class="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">
-                            {{ $cartCount }}
-                        </span>
-                    @endif
                 </a>
 
                 <!-- Settings Dropdown -->

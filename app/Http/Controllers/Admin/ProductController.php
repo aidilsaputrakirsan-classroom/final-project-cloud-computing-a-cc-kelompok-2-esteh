@@ -4,13 +4,21 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            abort(403, 'Anda tidak punya akses sebagai admin.');
+        }
+    }
+
     public function index()
     {
-        $products = Product::latest()->paginate(10);
+        $products = Product::all();
         return view('admin.products.index', compact('products'));
     }
 
@@ -21,22 +29,8 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric',
-            'image' => 'nullable|image|max:2048',
-        ]);
-
-        $data = $request->all();
-
-        if($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('products', 'public');
-        }
-
-        Product::create($data);
-
-        return redirect()->route('products.index')->with('success', 'Produk berhasil ditambahkan.');
+        Product::create($request->all());
+        return redirect()->route('admin.products.index');
     }
 
     public function edit(Product $product)
@@ -46,27 +40,13 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric',
-            'image' => 'nullable|image|max:2048',
-        ]);
-
-        $data = $request->all();
-
-        if($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('products', 'public');
-        }
-
-        $product->update($data);
-
-        return redirect()->route('products.index')->with('success', 'Produk berhasil diupdate.');
+        $product->update($request->all());
+        return redirect()->route('admin.products.index');
     }
 
     public function destroy(Product $product)
     {
         $product->delete();
-        return redirect()->route('products.index')->with('success', 'Produk berhasil dihapus.');
+        return redirect()->route('admin.products.index');
     }
 }

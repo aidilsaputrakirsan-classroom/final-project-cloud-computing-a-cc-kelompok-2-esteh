@@ -60,13 +60,19 @@ class OrderController extends Controller
 
     // Hapus item
     public function destroy(OrderItem $orderItem)
-    {
-        $order = $orderItem->order;
-        $orderItem->delete();
+{
+    // Ambil order dari item yang dihapus
+    $order = $orderItem->order;
 
-        $order->total = $order->items()->sum(DB::raw('quantity * price'));
-        $order->save();
+    // Hapus itemnya
+    $orderItem->delete();
 
-        return redirect()->back()->with('success', 'Item berhasil dihapus.');
+    // ✅ Jika order tidak punya item lagi → hapus order
+    if ($order->items()->count() == 0) {
+        $order->delete();
     }
+
+    return back()->with('success', 'Item berhasil dihapus!');
+}
+
 }

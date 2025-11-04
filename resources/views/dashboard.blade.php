@@ -46,11 +46,12 @@
                         <p>Tambahkan, edit, dan hapus menu makanan/minuman.</p>
                     </a>
 
-                    <a href="{{ route('orders.index') }}" class="menu-card bg-yellow-500 text-white p-6 text-center">
-                        <div class="icon-box">📦</div>
-                        <h3 class="font-bold text-xl">Monitoring Pesanan</h3>
-                        <p>Lihat status pesanan pelanggan.</p>
-                    </a>
+<a href="{{ route('admin.orders.index') }}" class="menu-card bg-yellow-500 text-white p-6 text-center">
+    <div class="icon-box">📦</div>
+    <h3 class="font-bold text-xl">Monitoring Pesanan</h3>
+    <p>Lihat status pesanan pelanggan.</p>
+</a>
+
 
                     <a href="{{ route('admin.users.index') }}" class="menu-card bg-blue-500 text-white p-6 text-center">
                         <div class="icon-box">👥</div>

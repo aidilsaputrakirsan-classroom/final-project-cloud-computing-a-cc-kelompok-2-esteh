@@ -8,6 +8,8 @@ class Kernel extends HttpKernel
 {
     /**
      * Global HTTP middleware stack.
+     *
+     * These middleware are run during every request to your application.
      */
     protected $middleware = [
         \App\Http\Middleware\TrustHosts::class,
@@ -41,6 +43,8 @@ class Kernel extends HttpKernel
 
     /**
      * Route middleware aliases.
+     *
+     * These middleware may be assigned to groups or used individually.
      */
     protected $routeMiddleware = [
         'auth' => \App\Http\Middleware\Authenticate::class,
@@ -54,7 +58,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
         // Middleware admin baru
-        'admin' => \App\Http\Middleware\AdminMiddleware::class,
+        
         'isAdmin' => \App\Http\Middleware\IsAdmin::class,
     ];
 }

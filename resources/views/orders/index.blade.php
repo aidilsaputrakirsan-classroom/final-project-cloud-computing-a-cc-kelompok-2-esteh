@@ -25,11 +25,12 @@
                                     Pesanan #{{ $order->id }}
                                 </h3>
 
-                                <span class="px-3 py-1 rounded text-white text-xs 
-                                    {{ $order->status == 'pending' ? 'bg-yellow-500' :
-                                       ($order->status == 'completed' ? 'bg-green-600' : 'bg-gray-500') }}">
-                                    {{ ucfirst($order->status) }}
-                                </span>
+                                    <span class="px-3 py-1 rounded text-white text-xs 
+                                        {{ $order->status == 'pending' ? 'bg-yellow-500' :
+                                           ($order->status == 'success' ? 'bg-green-600' : 'bg-red-600') }}">
+                                        {{ ucfirst($order->status) }}
+                                    </span>
+
                             </div>
 
                             <table class="w-full text-sm border-collapse">

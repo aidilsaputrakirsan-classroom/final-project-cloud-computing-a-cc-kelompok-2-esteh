@@ -23,9 +23,10 @@ class OrderItem extends Model
 
     // Relasi: item milik satu order
     public function order()
-    {
-        return $this->belongsTo(Order::class)->withDefault();
-    }
+{
+    return $this->belongsTo(Order::class);
+}
+
 
     // Relasi: item berisi satu produk
     public function product()

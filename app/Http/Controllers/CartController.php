@@ -13,7 +13,6 @@ class CartController extends Controller
     // Tambah produk ke keranjang
     public function add(Request $request, $id)
     {
-        // Jika form mengirim quantity, pakai itu. Jika tidak, set default 1
         $quantity = $request->input('quantity', 1);
 
         $request->validate([
@@ -25,12 +24,10 @@ class CartController extends Controller
                     ->first();
 
         if ($cart) {
-            // jika sudah ada di keranjang, tambahkan quantity-nya
             $cart->update([
                 'quantity' => $cart->quantity + $quantity
             ]);
         } else {
-            // kalau belum ada, buat baru
             Cart::create([
                 'user_id' => auth()->id(),
                 'product_id' => $id,
@@ -38,7 +35,7 @@ class CartController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'Berhasil ditambahkan ke keranjang!');
+        return redirect()->back()->with('success', 'Produk masuk keranjang!');
     }
 
     // Lihat keranjang
@@ -64,22 +61,27 @@ class CartController extends Controller
             return back()->with('error', 'Keranjang masih kosong!');
         }
 
-        // Buat Order
+        // Hitung total harga
+        $total = 0;
+        foreach ($items as $cart) {
+            $total += $cart->product->price * $cart->quantity;
+        }
+
         $order = Order::create([
             'user_id' => auth()->id(),
-            'status' => 'pending',
+            'status'  => 'pending',
+            'total'   => $total,
         ]);
 
         foreach ($items as $cart) {
             OrderItem::create([
-                'order_id' => $order->id,
-                'product_id' => $cart->product_id,
-                'quantity' => $cart->quantity,
-                'price'    => $cart->product->price,
+                'order_id'  => $order->id,
+                'product_id'=> $cart->product_id,
+                'quantity'  => $cart->quantity,
+                'price'     => $cart->product->price,
             ]);
         }
 
-        // Kosongkan keranjang setelah checkout
         Cart::where('user_id', auth()->id())->delete();
 
         return redirect()->route('orders.index')->with('success', 'Pesanan berhasil dibuat!');
