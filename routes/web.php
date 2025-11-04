@@ -4,25 +4,27 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 
 // =======================
-// HALAMAN AWAL
+// HALAMAN AWAL / WELCOME
 // =======================
 Route::get('/', function () {
     return view('welcome');
 });
 
 // =======================
-// DASHBOARD (LOGIN WAJIB)
+// DASHBOARD (BUTUH LOGIN)
 // =======================
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+
 // =======================
-// PROFILE (USER LOGIN)
+// PROFILE USER
 // =======================
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -30,40 +32,69 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
 // =======================
-// ADMIN ROUTES
+// ADMIN (KHUSUS ROLE ADMIN)
 // =======================
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    // CRUD Produk (Admin)
+
+    // Produk (CRUD Admin)
     Route::resource('products', AdminProductController::class);
 
-    // CRUD User (Admin)
+    // User Management (CRUD Admin)
     Route::resource('users', AdminUserController::class);
 
-    // TODO: Tambahkan monitoring pesanan, laporan, dll.
 });
 
+
 // =======================
-// USER ROUTES
+// USER BIASA
 // =======================
 Route::middleware(['auth'])->group(function () {
 
-    // Lihat daftar produk/menu
-    Route::get('menu', [ProductController::class, 'menu'])->name('products.menu');
+    // ====== MENU PRODUK ======
+    Route::get('/menu', [ProductController::class, 'menu'])->name('products.menu');
 
-    // Tambahkan produk ke pesanan
-    Route::post('orders/add/{product}', [OrderController::class, 'add'])->name('orders.add');
 
-    // Lihat semua pesanan user
-    Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
 
-    // Update item pesanan (terima PUT dan PATCH agar fleksibel)
-    Route::match(['put', 'patch'], 'order-items/{orderItem}', [OrderController::class, 'update'])
+    // =======================
+    // CART / KERANJANG
+    // =======================
+
+    // Lihat isi keranjang
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+
+    Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+    // Tambah produk ke keranjang
+    Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
+
+    // Hapus item dari keranjang
+    Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+
+    // Halaman review sebelum pembayaran
+    Route::get('/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+
+    // Simpan order ke database
+    Route::post('/checkout', [OrderController::class, 'store'])->name('checkout.store');
+
+
+
+    // =======================
+    // ORDER / RIWAYAT PESANAN
+    // =======================
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+
+    // Update status pesanan (opsional)
+    Route::match(['put', 'patch'], '/order-items/{orderItem}', [OrderController::class, 'update'])
         ->name('orders.update');
 
-    // Hapus item dari pesanan
-    Route::delete('order-items/{orderItem}', [OrderController::class, 'destroy'])
+    // Hapus item pesanan (opsional)
+    Route::delete('/order-items/{orderItem}', [OrderController::class, 'destroy'])
         ->name('orders.destroy');
+
+    
+
+
 });
 
 require __DIR__.'/auth.php';

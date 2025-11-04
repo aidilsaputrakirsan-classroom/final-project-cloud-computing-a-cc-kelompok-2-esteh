@@ -36,37 +36,37 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Nasi Goreng Spesial',
                 'description' => 'Nasi goreng lengkap dengan telur, ayam, dan sayuran',
                 'price' => 15000,
-                'image' => null,
+                'image' => 'products/nasgor.png',
             ],
             [
                 'name' => 'Mie Ayam Bakso',
                 'description' => 'Mie ayam dengan bakso kenyal dan kuah sedap',
                 'price' => 12000,
-                'image' => null,
+                'image' => 'products/mie-ayam-bakso.jpg',
             ],
             [
                 'name' => 'Es Teh Manis',
                 'description' => 'Segelas es teh manis dingin',
                 'price' => 5000,
-                'image' => null,
+                'image' => "products/Es-Teh-Manis.jpg",
             ],
             [
                 'name' => 'Jus Alpukat',
                 'description' => 'Jus alpukat segar dengan susu',
                 'price' => 10000,
-                'image' => null,
+                'image' => "products/Jus-Alpukat.jpg",
             ],
             [
                 'name' => 'Ayam Goreng Crispy',
                 'description' => 'Ayam goreng renyah dan gurih',
                 'price' => 20000,
-                'image' => null,
+                'image' => "products/ayam-crispy.jpg",
             ],
             [
                 'name' => 'Kopi Hitam',
                 'description' => 'Kopi hitam panas tanpa gula',
                 'price' => 8000,
-                'image' => null,
+                'image' => "products/Kopi-Hitam.jpg",
             ],
         ];
 
