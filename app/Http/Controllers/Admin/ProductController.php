@@ -16,11 +16,11 @@ class ProductController extends Controller
         }
     }
 
-    public function index()
-    {
-        $products = Product::all();
-        return view('admin.products.index', compact('products'));
-    }
+public function index()
+{
+    $products = Product::latest()->paginate(10); // <- pakai paginate
+    return view('admin.products.index', compact('products'));
+}
 
     public function create()
     {
@@ -28,10 +28,23 @@ class ProductController extends Controller
     }
 
     public function store(Request $request)
-    {
-        Product::create($request->all());
-        return redirect()->route('admin.products.index');
+{
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'price' => 'required|numeric',
+        'image' => 'nullable|image|max:2048',
+    ]);
+
+    if ($request->hasFile('image')) {
+        $validated['image'] = $request->file('image')->store('products', 'public');
     }
+
+    Product::create($validated);
+
+    return redirect()->route('admin.products.index')->with('success', 'Produk berhasil ditambahkan!');
+}
+
 
     public function edit(Product $product)
     {
