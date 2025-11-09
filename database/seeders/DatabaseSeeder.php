@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Product;
+use App\Models\PaymentMethod; // ✅ penting
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,19 +15,17 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // --- USERS ---
-        // Admin
         User::create([
             'name' => 'Admin Lokalicious',
             'email' => 'admin@lokalicious.com',
-            'password' => bcrypt('admin123'), // ganti sesuai keinginan
+            'password' => bcrypt('admin123'),
             'role' => 'admin',
         ]);
 
-        // User biasa / pelanggan
         User::create([
             'name' => 'User Lokalicious',
             'email' => 'user@lokalicious.com',
-            'password' => bcrypt('user123'), // ganti sesuai keinginan
+            'password' => bcrypt('user123'),
             'role' => 'user',
         ]);
 
@@ -73,5 +72,21 @@ class DatabaseSeeder extends Seeder
         foreach ($products as $product) {
             Product::create($product);
         }
+
+        // ✅ --- PAYMENT METHODS ---
+        PaymentMethod::insert([
+            [
+                'name' => 'Cash On Delivery',
+                'code' => 'cod',
+                'active' => true
+            ],
+            [
+                'name' => 'Transfer Bank',
+                'code' => 'bank_transfer',
+                'active' => true
+            ],
+        ]);
+
+        // ✅ selesai
     }
 }

@@ -1,14 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-green-700 leading-tight flex items-center justify-between">
-            <span class="flex items-center gap-2">🍽️ {{ __('Dashboard') }}</span>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-green-700">
+                Dashboard
+            </h2>
 
-            <!-- Tombol kembali ke welcome -->
             <a href="/"
-               class="text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded shadow-sm transition">
-                ⬅️ Kembali ke Beranda
+                class="bg-gray-600 text-white px-3 py-1.5 rounded hover:bg-gray-700 text-sm">
+                Kembali ke Beranda
             </a>
-        </h2>
+        </div>
     </x-slot>
 
     <style>
@@ -46,17 +47,22 @@
                         <p>Tambahkan, edit, dan hapus menu makanan/minuman.</p>
                     </a>
 
-<a href="{{ route('admin.orders.index') }}" class="menu-card bg-yellow-500 text-white p-6 text-center">
-    <div class="icon-box">📦</div>
-    <h3 class="font-bold text-xl">Monitoring Pesanan</h3>
-    <p>Lihat status pesanan pelanggan.</p>
-</a>
-
+                    <a href="{{ route('admin.orders.index') }}" class="menu-card bg-yellow-500 text-white p-6 text-center">
+                        <div class="icon-box">📦</div>
+                        <h3 class="font-bold text-xl">Monitoring Pesanan</h3>
+                        <p>Lihat status pesanan pelanggan.</p>
+                    </a>
 
                     <a href="{{ route('admin.users.index') }}" class="menu-card bg-blue-500 text-white p-6 text-center">
                         <div class="icon-box">👥</div>
                         <h3 class="font-bold text-xl">Kelola User</h3>
                         <p>Kelola data pelanggan dan admin.</p>
+                    </a>
+
+                    <a href="{{ route('admin.payment-methods.index') }}" class="menu-card bg-purple-500 text-white p-6 text-center">
+                        <div class="icon-box">💳</div>
+                        <h3 class="font-bold text-xl">Metode Pembayaran</h3>
+                        <p>Kelola metode pembayaran (DANA, Bank, OVO, dll).</p>
                     </a>
 
                 </div>
@@ -80,7 +86,6 @@
                 @endif
 
             </div>
-
         </div>
     </div>
 </x-app-layout>

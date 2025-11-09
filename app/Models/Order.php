@@ -12,7 +12,10 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'status',
-        'total'
+        'total',
+        'payment_method',
+        'payment_status',
+        'transaction_id'
     ];
 
     // Relasi: satu order memiliki banyak item

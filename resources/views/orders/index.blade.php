@@ -1,8 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Pesanan Saya
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-green-700">
+                Pesanan Saya
+            </h2>
+
+            <a href="{{ route('dashboard') }}"
+                class="bg-gray-600 text-white px-3 py-1.5 rounded hover:bg-gray-700 text-sm">
+                Kembali
+            </a>
+        </div>
     </x-slot>
 
 <div class="py-10">
@@ -25,11 +32,22 @@
                                     Pesanan #{{ $order->id }}
                                 </h3>
 
+                                <div class="flex items-center gap-2">
                                     <span class="px-3 py-1 rounded text-white text-xs 
                                         {{ $order->status == 'pending' ? 'bg-yellow-500' :
                                            ($order->status == 'success' ? 'bg-green-600' : 'bg-red-600') }}">
                                         {{ ucfirst($order->status) }}
                                     </span>
+
+                                    {{-- Tampilkan juga info payment_status jika tersedia --}}
+                                    @if(isset($order->payment_status))
+                                        @if($order->payment_status === 'paid')
+                                            <span class="px-3 py-1 rounded text-white text-xs bg-green-700">Paid</span>
+                                        @else
+                                            <span class="px-3 py-1 rounded text-white text-xs bg-gray-600">Unpaid</span>
+                                        @endif
+                                    @endif
+                                </div>
 
                             </div>
 
@@ -91,7 +109,24 @@
                                         <td class="p-2 border font-bold text-green-700">
                                             Rp {{ number_format($total, 0, ',', '.') }}
                                         </td>
-                                        <td class="border"></td>
+
+                                        {{-- Tambahkan kolom aksi: tombol Bayar atau status sudah dibayar --}}
+                                        <td class="border p-2 text-center">
+                                            @php
+                                                // aman: cek apakah kolom payment_status ada
+                                                $isPaid = isset($order->payment_status) && $order->payment_status === 'paid';
+                                            @endphp
+
+                                            @if(!$isPaid)
+                                                {{-- Tombol Bayar mengarah ke halaman metode pembayaran --}}
+                                                <a href="{{ route('orders.payment', $order) }}"
+                                                   class="inline-block px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">
+                                                    Bayar
+                                                </a>
+                                            @else
+                                                <span class="inline-block px-3 py-1 bg-gray-100 text-green-700 rounded">Sudah dibayar</span>
+                                            @endif
+                                        </td>
                                     </tr>
 
                                 </tbody>

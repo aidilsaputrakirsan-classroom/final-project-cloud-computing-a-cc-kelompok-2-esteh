@@ -18,29 +18,57 @@
                 </div>
             </div>
 
-            <!-- KERANJANG -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
+            <!-- Right side (Cart, Notif, User) -->
+            <div class="hidden sm:flex sm:items-center sm:ms-6 space-x-4">
 
-@if(auth()->user()->role !== 'admin')
-    <a href="{{ route('cart.index') }}" class="relative mr-6">
-        <!-- Icon Keranjang -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-gray-700"
-             fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M3 3h2l.4 2M7 13h10l1.6-8H5.4M7 13l-1.2 6h10.4M10 21a1 1 0 11-2 0 1 1 0 012 0zm8 0a1 1 0 11-2 0 1 1 0 012 0z" />
-        </svg>
-    
-            @if($cartCount > 0)
-            <span class="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">
-                {{ $cartCount }}
-            </span>
-        @endif
-    </a>
-@endif
+                {{-- KERANJANG --}}
+                @if(auth()->user()->role !== 'admin')
+                    <a href="{{ route('cart.index') }}" class="relative mr-2">
+                        <!-- Icon Keranjang -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-gray-700"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3 3h2l.4 2M7 13h10l1.6-8H5.4M7 13l-1.2 6h10.4M10 21a1 1 0 11-2 0 1 1 0 012 0zm8 0a1 1 0 11-2 0 1 1 0 012 0z" />
+                        </svg>
 
-                </a>
+                        @if(isset($cartCount) && $cartCount > 0)
+                            <span class="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">
+                                {{ $cartCount }}
+                            </span>
+                        @endif
+                    </a>
+                @endif
 
-                <!-- Settings Dropdown -->
+                {{-- NOTIFICATION BELL --}}
+                <div id="notification-root" class="relative">
+                    <button id="notif-toggle" class="relative focus:outline-none" type="button" title="Notifikasi">
+                        <!-- Bell icon -->
+                        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h11z"/>
+                        </svg>
+
+                        <span id="notif-count" class="absolute -top-1 -right-2 inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold leading-none text-white bg-red-600 rounded-full" style="display:none">0</span>
+                    </button>
+
+                    <!-- Dropdown -->
+                    <div id="notif-dropdown" class="hidden absolute right-0 mt-2 w-96 bg-white border rounded shadow-lg z-50">
+                        <div class="p-3 border-b flex justify-between items-center">
+                            <strong class="text-sm">Notifikasi</strong>
+                            <button id="mark-all-read" class="text-sm text-blue-600">Tandai semua</button>
+                        </div>
+
+                        <div id="notif-list" class="max-h-64 overflow-auto">
+                            <div class="p-3 text-sm text-gray-500">Memuat...</div>
+                        </div>
+
+                        <div class="p-2 border-t text-center">
+                            <a href="{{ route('notifications.index') }}" class="text-sm text-blue-600">Lihat semua</a>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Settings Dropdown --}}
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button
@@ -115,7 +143,12 @@
             <div class="mt-3 space-y-1">
 
                 <x-responsive-nav-link :href="route('cart.index')">
-                    🛒 Keranjang ({{ $cartCount }})
+                    🛒 Keranjang ({{ $cartCount ?? 0 }})
+                </x-responsive-nav-link>
+
+                <!-- Responsive notification link -->
+                <x-responsive-nav-link href="#" onclick="event.preventDefault(); document.getElementById('notif-toggle').click();">
+                    🔔 Notifikasi
                 </x-responsive-nav-link>
 
                 <x-responsive-nav-link :href="route('profile.edit')">
