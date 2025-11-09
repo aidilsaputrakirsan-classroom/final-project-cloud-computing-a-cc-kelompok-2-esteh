@@ -9,41 +9,41 @@
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow-md sm:rounded-lg p-6">
 
-                <p class="mb-4 text-gray-700">Total Pembayaran:</p>
-                <h3 class="text-2xl font-bold text-green-600 mb-6">
+                <p class="mb-2 text-gray-700">Total Pembayaran:</p>
+                <h3 class="text-3xl font-extrabold text-green-600 mb-6">
                     Rp {{ number_format($order->total, 0, ',', '.') }}
                 </h3>
 
-                <form action="{{ route('orders.processPayment', $order) }}" method="POST">
+                <form action="{{ route('orders.payment.process', $order->id) }}" method="POST" class="space-y-6">
                     @csrf
+                    <p class="font-semibold text-gray-700">Pilih Metode Pembayaran:</p>
 
-                    <div class="mb-4">
-                        <h4 class="font-semibold mb-2">Pilih Metode Pembayaran</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
-                        <label class="inline-flex items-center mb-2">
-                            <input type="radio" name="method" value="dana" checked class="mr-2">
-                            <span>DANA (E-Wallet)</span>
+                        @foreach($methods as $m)
+                        <label class="cursor-pointer">
+                            <input type="radio" name="method" value="{{ $m->code }}" class="hidden peer" required>
+                            <div class="border rounded-xl p-4 flex items-center gap-3 bg-gray-50 peer-checked:border-green-500 peer-checked:bg-green-50 transition">
+                                
+                                <div class="w-10 h-10 flex items-center justify-center rounded-full bg-white shadow">
+                                    🏦
+                                </div>
+
+                                <div>
+                                    <p class="font-semibold text-gray-800">{{ $m->name }}</p>
+                                    <p class="text-sm text-gray-500 uppercase">{{ $m->code }}</p>
+                                </div>
+                            </div>
                         </label>
-                        <br>
-                        <label class="inline-flex items-center">
-                            <input type="radio" name="method" value="bank" class="mr-2">
-                            <span>Bank Transfer (Virtual Account)</span>
-                        </label>
+                        @endforeach
+
                     </div>
 
-                    <div class="mb-4 text-sm text-gray-600">
-                        <strong>Catatan:</strong> Ini hanya simulasi pembayaran. Setelah klik <em>Bayar Sekarang</em>, pesanan akan otomatis ditandai <strong>paid</strong>.
-                    </div>
-
-                    <div class="flex gap-3">
-                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-white hover:bg-green-700">
-                            Bayar Sekarang
-                        </button>
-
-                        <a href="{{ route('orders.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-200 border border-transparent rounded-md text-sm">
-                            Kembali
-                        </a>
-                    </div>
+                    <button 
+                        type="submit" 
+                        class="w-full py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg text-lg transition">
+                        Bayar Sekarang
+                    </button>
                 </form>
 
             </div>

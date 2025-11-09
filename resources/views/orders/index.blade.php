@@ -1,8 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Pesanan Saya
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-green-700">
+                Pesanan Saya
+            </h2>
+
+            <a href="{{ route('dashboard') }}"
+                class="bg-gray-600 text-white px-3 py-1.5 rounded hover:bg-gray-700 text-sm">
+                Kembali
+            </a>
+        </div>
     </x-slot>
 
 <div class="py-10">
@@ -112,7 +119,7 @@
 
                                             @if(!$isPaid)
                                                 {{-- Tombol Bayar mengarah ke halaman metode pembayaran --}}
-                                                <a href="{{ route('orders.pay', $order) }}"
+                                                <a href="{{ route('orders.payment', $order) }}"
                                                    class="inline-block px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">
                                                     Bayar
                                                 </a>

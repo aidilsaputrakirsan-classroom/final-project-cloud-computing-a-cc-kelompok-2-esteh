@@ -1,8 +1,15 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-green-700 leading-tight">
-            {{ __('Kelola Produk') }}
-        </h2>
+        <x-slot name="header">
+        <div class="flex justify-between items-center">
+           <h2 class="font-semibold text-xl text-green-700">
+                Manajemen Kelola Produk
+            </h2>
+
+            <a href="{{ route('dashboard') }}"
+                class="bg-gray-600 text-white px-3 py-1.5 rounded hover:bg-gray-700 text-sm">
+                Kembali
+            </a>
+        </div>
     </x-slot>
 
     <div class="py-10">
@@ -12,9 +19,6 @@
         Tambah Produk
     </a>
 
-        <a href="{{ route('dashboard') }}" class="bg-gray-200 text-gray-700 px-4 py-2 rounded mb-4 inline-block hover:bg-gray-300 shadow-sm mt-2">
-        ⬅️ Kembali ke Dashboard
-    </a>
             @if(session('success'))
                 <div class="bg-green-100 text-green-700 px-4 py-2 rounded mb-4">
                     {{ session('success') }}

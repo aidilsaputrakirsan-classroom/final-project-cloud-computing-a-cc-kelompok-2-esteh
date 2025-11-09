@@ -7,21 +7,11 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\AdminOrderController;
-use App\Http\Controllers\Admin\PaymentMethodController; // <-- controller untuk admin payment methods
+use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\NotificationController; // <-- notifikasi (in-app)
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Di file inilah semua route web aplikasi didefinisikan.
-| Route di sini akan diproses oleh web middleware group.
-|
-*/
+use App\Http\Controllers\NotificationController;
 
 // =======================
 // HALAMAN AWAL
@@ -41,7 +31,6 @@ Route::get('/dashboard', function () {
 // PROFILE USER
 // =======================
 Route::middleware('auth')->group(function () {
-
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -64,32 +53,30 @@ Route::middleware(['auth', 'IsAdmin'])
         // CRUD Pesanan (Admin)
         Route::resource('orders', AdminOrderController::class);
 
-        // Update status order oleh admin (existing)
+        // Update status order
         Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])
             ->name('orders.updateStatus');
 
-        // Admin - Edit / Update pembayaran untuk sebuah order
+        // Edit pembayaran order
         Route::get('/orders/{order}/edit-payment', [AdminOrderController::class, 'editPayment'])
             ->name('orders.editPayment');
         Route::put('/orders/{order}/edit-payment', [AdminOrderController::class, 'updatePayment'])
             ->name('orders.updatePayment');
 
-        // =======================
-        // Admin - Manajemen Metode Pembayaran (CRUD)
-        // =======================
-        // resource controller: index, create, store, edit, update, destroy
-        Route::resource('payment-methods', PaymentMethodController::class)->except(['show']);
+        // ✅ CRUD Metode Pembayaran
+        Route::resource('payment-methods', PaymentMethodController::class)
+            ->except(['show']);
     });
 
 // =======================
-// USER BIASA (Customer)
+// USER AREA
 // =======================
 Route::middleware('auth')->group(function () {
 
     // MENU PRODUK
     Route::get('/menu', [ProductController::class, 'menu'])->name('products.menu');
 
-    // KERANJANG (CART)
+    // CART
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
     Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
@@ -98,30 +85,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
     Route::post('/checkout', [OrderController::class, 'store'])->name('checkout.store');
 
-    // ✅ PEMBAYARAN PESANAN (Dummy Payment)
-    Route::get('/orders/{order}/pay', [OrderController::class, 'showPayment'])->name('orders.pay');
-    Route::post('/orders/{order}/pay', [OrderController::class, 'processPayment'])->name('orders.processPayment');
+    // ✅ PEMBAYARAN PESANAN
+    Route::get('/orders/{order}/pay', [OrderController::class, 'showPayment'])->name('orders.payment');
+    Route::post('/orders/{order}/pay', [OrderController::class, 'processPayment'])->name('orders.payment.process');
 
     // RIWAYAT PESANAN
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::match(['put', 'patch'], '/order-items/{orderItem}', [OrderController::class, 'update'])->name('orders.update');
     Route::delete('/order-items/{orderItem}', [OrderController::class, 'destroy'])->name('orders.destroy');
 
-    // =======================
-    // NOTIFIKASI (in-app)
-    // =======================
-    // Ambil notifikasi (unread + read)
+    // NOTIFIKASI
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
-
-    // Tandai 1 notifikasi sebagai terbaca
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
-
-    // Tandai semua notifikasi terbaca
     Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.readAll');
 });
 
-// =======================
-// AUTHENTICATION ROUTES
-// (Login, Register, Forgot Password, dll.)
-// =======================
+// AUTH
 require __DIR__.'/auth.php';
