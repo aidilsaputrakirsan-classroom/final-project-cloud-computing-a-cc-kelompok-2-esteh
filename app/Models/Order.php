@@ -15,7 +15,8 @@ class Order extends Model
         'total',
         'payment_method',
         'payment_status',
-        'transaction_id'
+        'transaction_id',
+        'note', // 📝 tambahkan ini
     ];
 
     // Relasi: satu order memiliki banyak item

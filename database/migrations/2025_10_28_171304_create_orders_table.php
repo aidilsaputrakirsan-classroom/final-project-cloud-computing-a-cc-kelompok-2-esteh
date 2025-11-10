@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Jalankan migrasi: membuat tabel 'orders'
-     */
     public function up(): void
     {
         Schema::create('orders', function (Blueprint $table) {
@@ -16,8 +13,8 @@ return new class extends Migration
 
             // Relasi ke tabel users
             $table->foreignId('user_id')
-                  ->constrained()
-                  ->onDelete('cascade');
+                ->constrained()
+                ->onDelete('cascade');
 
             // Status pesanan: pending, paid, cancelled, dll
             $table->string('status')->default('pending');
@@ -25,13 +22,13 @@ return new class extends Migration
             // Total harga seluruh item
             $table->decimal('total', 10, 2)->default(0);
 
+            // 📝 Tambahkan kolom catatan
+            $table->text('note')->nullable();
+
             $table->timestamps();
         });
     }
 
-    /**
-     * Rollback migrasi: hapus tabel 'orders'
-     */
     public function down(): void
     {
         Schema::dropIfExists('orders');

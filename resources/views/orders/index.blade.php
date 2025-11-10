@@ -31,6 +31,11 @@
                                 <h3 class="font-bold text-lg">
                                     Pesanan #{{ $order->id }}
                                 </h3>
+                                    @if($order->note)
+                                        <p class="text-sm text-gray-600 mt-1">
+                                            <strong>Catatan:</strong> {{ $order->note }}
+                                        </p>
+                                    @endif
 
                                 <div class="flex items-center gap-2">
                                     <span class="px-3 py-1 rounded text-white text-xs 
