@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Cart;
+use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -35,18 +36,16 @@ class OrderController extends Controller
         }
 
         DB::transaction(function () use ($user, $cartItems, $request) {
-            // Hitung total harga
             $total = $cartItems->sum(fn($item) => $item->product->price * $item->quantity);
 
-            // Buat pesanan baru
             $order = Order::create([
                 'user_id' => $user->id,
                 'status' => 'pending',
+                'payment_status' => 'unpaid',
                 'total' => $total,
-                'note' => $request->note, // 📝 simpan catatan di sini
+                'note' => $request->note,
             ]);
 
-            // Pindahkan item dari cart ke order_items
             foreach ($cartItems as $item) {
                 OrderItem::create([
                     'order_id' => $order->id,
@@ -56,7 +55,6 @@ class OrderController extends Controller
                 ]);
             }
 
-            // Hapus keranjang setelah checkout
             Cart::where('user_id', $user->id)->delete();
         });
 
@@ -65,6 +63,10 @@ class OrderController extends Controller
 
     public function update(Request $request, OrderItem $orderItem)
     {
+        if ($orderItem->order->status === 'success') {
+            return back()->with('error', 'Pesanan sudah dibayar dan tidak bisa diubah.');
+        }
+
         $request->validate(['quantity' => 'required|integer|min:1']);
         $orderItem->update(['quantity' => $request->quantity]);
 
@@ -73,18 +75,45 @@ class OrderController extends Controller
 
     public function destroy(OrderItem $orderItem)
     {
+        if ($orderItem->order->status === 'success') {
+            return back()->with('error', 'Pesanan sudah dibayar dan tidak bisa dihapus.');
+        }
+
         $orderItem->delete();
         return back()->with('success', 'Item berhasil dihapus.');
     }
 
-    public function showPayment(Order $order)
+    // 🔹 Halaman pembayaran
+    public function showPayment($id)
     {
-        return view('orders.payment', compact('order'));
+        // Ambil ulang data order langsung dari database dan pastikan milik user yang login
+        $order = Order::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        // Ambil semua metode pembayaran aktif
+        $methods = PaymentMethod::active()->get();
+
+        return view('orders.payment', compact('order', 'methods'));
     }
 
+
+    // 🔹 Proses pembayaran
     public function processPayment(Request $request, Order $order)
     {
-        $order->update(['status' => 'success']);
-        return redirect()->route('orders.index')->with('success', 'Pembayaran berhasil!');
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $request->validate([
+            'method' => 'required|string|exists:payment_methods,code',
+        ]);
+
+        $order->update([
+            'payment_method' => $request->method,
+            'payment_status' => 'paid',
+        ]);
+
+        return redirect()->route('orders.index')->with('success', 'Pembayaran berhasil! Menunggu verifikasi admin.');
     }
 }

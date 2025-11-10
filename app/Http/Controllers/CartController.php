@@ -34,8 +34,15 @@ class CartController extends Controller
             ]);
         }
 
-        return redirect()->route('cart.index')->with('success', 'Produk berhasil ditambahkan ke keranjang.');
-    }
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Produk berhasil ditambahkan ke keranjang.'
+            ]);
+        }
+
+            return redirect()->back()->with('success', 'Produk berhasil ditambahkan ke keranjang.');
+            }
 
     public function remove($id)
     {
