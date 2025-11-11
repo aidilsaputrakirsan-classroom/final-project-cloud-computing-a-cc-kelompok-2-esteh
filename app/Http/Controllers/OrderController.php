@@ -9,6 +9,7 @@ use App\Models\Cart;
 use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Notifications\OrderNotification; // ✅ Tambah
 
 class OrderController extends Controller
 {
@@ -56,6 +57,9 @@ class OrderController extends Controller
             }
 
             Cart::where('user_id', $user->id)->delete();
+
+            // ✅ Kirim notifikasi pesanan dibuat
+            $user->notify(new OrderNotification($order, 'create'));
         });
 
         return redirect()->route('orders.index')->with('success', 'Pesanan berhasil dibuat!');
@@ -70,6 +74,9 @@ class OrderController extends Controller
         $request->validate(['quantity' => 'required|integer|min:1']);
         $orderItem->update(['quantity' => $request->quantity]);
 
+        // ✅ Notifikasi update
+        $orderItem->order->user->notify(new OrderNotification($orderItem->order, 'update'));
+
         return back()->with('success', 'Jumlah item berhasil diperbarui.');
     }
 
@@ -79,26 +86,27 @@ class OrderController extends Controller
             return back()->with('error', 'Pesanan sudah dibayar dan tidak bisa dihapus.');
         }
 
+        $order = $orderItem->order;
+
         $orderItem->delete();
+
+        // ✅ Notifikasi delete
+        $order->user->notify(new OrderNotification($order, 'delete'));
+
         return back()->with('success', 'Item berhasil dihapus.');
     }
 
-    // 🔹 Halaman pembayaran
     public function showPayment($id)
     {
-        // Ambil ulang data order langsung dari database dan pastikan milik user yang login
         $order = Order::where('id', $id)
             ->where('user_id', Auth::id())
             ->firstOrFail();
 
-        // Ambil semua metode pembayaran aktif
         $methods = PaymentMethod::active()->get();
 
         return view('orders.payment', compact('order', 'methods'));
     }
 
-
-    // 🔹 Proses pembayaran
     public function processPayment(Request $request, Order $order)
     {
         if ($order->user_id !== Auth::id()) {
@@ -113,6 +121,9 @@ class OrderController extends Controller
             'payment_method' => $request->method,
             'payment_status' => 'paid',
         ]);
+
+        // ✅ Notifikasi pembayaran
+        $order->user->notify(new OrderNotification($order, 'paid'));
 
         return redirect()->route('orders.index')->with('success', 'Pembayaran berhasil! Menunggu verifikasi admin.');
     }

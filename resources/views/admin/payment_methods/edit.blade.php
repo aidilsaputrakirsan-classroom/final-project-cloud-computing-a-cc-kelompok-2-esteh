@@ -33,14 +33,7 @@
                 </select>
             </div>
 
-            <div>
-                <label class="font-semibold">Config (opsional)</label>
-                <textarea name="config" class="w-full border p-2 rounded">
-{{ is_array($method->config) ? json_encode($method->config) : null }}
-                </textarea>
-            </div>
-
-            <button class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700">
+                        <button class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700">
                 Perbarui
             </button>
 

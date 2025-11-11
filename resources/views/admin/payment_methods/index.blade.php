@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
-                        <h2 class="font-semibold text-xl text-green-700">
+            <h2 class="font-semibold text-xl text-green-700">
                 Manajemen Metode Pembayaran
             </h2>
 
