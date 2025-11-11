@@ -6,9 +6,12 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Jalankan migrasi: membuat tabel payment_methods
+     */
     public function up(): void
     {
-        Schema::create('payment_methods', function (Blueprint $table) {       
+        Schema::create('payment_methods', function (Blueprint $table) {
             $table->id();
             $table->string('name');            // Nama metode (Transfer Bank, Dana, Ovo, dll)
             $table->string('code')->unique();  // Kode (BANK, DANA, OVO, COD) 
@@ -17,6 +20,9 @@ return new class extends Migration
         });
     }
 
+    /**
+     * Rollback migrasi: hapus tabel payment_methods
+     */
     public function down(): void
     {
         Schema::dropIfExists('payment_methods');

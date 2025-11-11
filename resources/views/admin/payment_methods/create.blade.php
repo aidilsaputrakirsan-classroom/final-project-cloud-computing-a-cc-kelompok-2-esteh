@@ -28,11 +28,6 @@
                 </select>
             </div>
 
-            <div>
-                <label class="font-semibold">Config (opsional)</label>
-                <textarea name="config" class="w-full border p-2 rounded" placeholder='{"bank":"BCA", "rekening":"1234"}'></textarea>
-            </div>
-
             <button class="bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700">
                 Simpan
             </button>

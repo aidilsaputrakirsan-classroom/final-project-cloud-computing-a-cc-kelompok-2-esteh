@@ -10,16 +10,16 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::create('payment_methods', function (Blueprint $table) {
-        $table->id();
-        $table->string('name');            // Nama metode (Transfer Bank, Dana, Ovo, dll)
-        $table->string('code')->unique();  // Kode (BANK, DANA, OVO, COD)
-        $table->boolean('active')->default(1);
-        $table->timestamps();
-    });
-}
-
+    {
+        Schema::create('products', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');               // Nama produk
+            $table->text('description')->nullable(); // Deskripsi produk (boleh kosong)
+            $table->decimal('price', 8, 2);      // Harga produk
+            $table->string('image')->nullable();  // Path gambar (boleh kosong)
+            $table->timestamps();                 // created_at & updated_at
+        });
+    }
 
     /**
      * Reverse the migrations.
