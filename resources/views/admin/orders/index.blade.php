@@ -26,16 +26,36 @@
                         <div class="border rounded-lg shadow-sm p-5 mb-6 bg-gray-50">
 
                             {{-- HEADER PESANAN --}}
-                            <div class="flex justify-between items-center mb-3">
-                                <h3 class="font-bold text-lg">
-                                    Pesanan #{{ $order->id }} — {{ $order->user->name }}
-                                </h3>
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <h3 class="font-bold text-lg">
+                                        Pesanan #{{ $order->id }} — {{ $order->user->name }}
+                                    </h3>
+
+                                    {{-- TAMBAHAN UNTUK MENAMPILKAN CATATAN --}}
+                                    @if($order->note)
+                                        <p class="text-gray-600 text-sm mt-1">
+                                            <span class="font-semibold text-gray-800">Catatan:</span> 
+                                            {{ $order->note }}
+                                        </p>
+                                    @endif
+                                </div>
 
                                 {{-- FORM UBAH STATUS --}}
                                 <form action="{{ route('admin.orders.updateStatus', $order->id) }}" 
                                       method="POST" class="flex items-center gap-2">
                                     @csrf
                                     @method('PATCH')
+                                    
+                                    {{-- STATUS PEMBAYARAN --}}
+@php
+    $isPaid = isset($order->payment_status) && $order->payment_status === 'paid';
+@endphp
+
+<span class="px-3 py-1 rounded text-white text-xs
+    {{ $isPaid ? 'bg-green-700' : 'bg-gray-600' }}">
+    {{ $isPaid ? 'Paid' : 'Unpaid' }}
+</span>
 
                                     <select name="status" 
                                         class="border rounded px-2 pr-7 py-1 text-sm"
@@ -97,16 +117,17 @@
                                         </tr>
                                     </tbody>
                                 </table>
+
                                 <div class="flex justify-end mt-3">
-    <form action="{{ route('admin.orders.destroy', $order) }}" method="POST"
-          onsubmit="return confirm('Yakin ingin menghapus pesanan ini beserta itemnya?')">
-        @csrf
-        @method('DELETE')
-        <button class="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700">
-            Hapus Pesanan
-        </button>
-    </form>
-</div>
+                                    <form action="{{ route('admin.orders.destroy', $order) }}" method="POST"
+                                          onsubmit="return confirm('Yakin ingin menghapus pesanan ini beserta itemnya?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700">
+                                            Hapus Pesanan
+                                        </button>
+                                    </form>
+                                </div>
 
                             @else
                                 <p class="text-gray-500 text-sm py-3">Tidak ada detail item.</p>

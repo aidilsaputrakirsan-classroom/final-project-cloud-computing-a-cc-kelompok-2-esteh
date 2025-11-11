@@ -33,7 +33,7 @@
                                 </p>
 
                                 <!-- Form dengan Quantity -->
-                                <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-3">
+                                <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-3 add-to-cart-form">
                                     @csrf
 
                                     <div class="flex items-center gap-2">
@@ -46,7 +46,6 @@
                                         </button>
                                     </div>
                                 </form>
-
                             </div>
                         @endforeach
                     </div>
@@ -58,4 +57,56 @@
             </div>
         </div>
     </div>
+    @push('scripts')
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Tangkap semua form dengan class "add-to-cart-form"
+    document.querySelectorAll('.add-to-cart-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // cegah reload halaman
+
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': form.querySelector('input[name=_token]').value,
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('✅ ' + data.message);
+                } else {
+                    showToast('⚠️ ' + (data.message || 'Terjadi kesalahan.'));
+                }
+            })
+            .catch(() => {
+                showToast('❌ Gagal menambahkan ke keranjang.');
+            });
+        });
+    });
+
+    // Fungsi toast sederhana
+    function showToast(message) {
+        const toast = document.createElement('div');
+        toast.textContent = message;
+        toast.className = 'fixed bottom-5 right-5 bg-green-600 text-white px-4 py-2 rounded shadow-lg animate-fade-in';
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.remove();
+        }, 2500);
+    }
+});
+</script>
+
+<style>
+@keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.animate-fade-in { animation: fade-in 0.3s ease-out; }
+</style>
+@endpush
+
 </x-app-layout>

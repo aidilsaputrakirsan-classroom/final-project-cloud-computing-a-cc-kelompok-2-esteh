@@ -2,88 +2,69 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Cart;
 use App\Models\Product;
-use App\Models\Order;
-use App\Models\OrderItem;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    // Tambah produk ke keranjang
-    public function add(Request $request, $id)
-    {
-        $quantity = $request->input('quantity', 1);
-
-        $request->validate([
-            'quantity' => 'nullable|integer|min:1'
-        ]);
-
-        $cart = Cart::where('user_id', auth()->id())
-                    ->where('product_id', $id)
-                    ->first();
-
-        if ($cart) {
-            $cart->update([
-                'quantity' => $cart->quantity + $quantity
-            ]);
-        } else {
-            Cart::create([
-                'user_id' => auth()->id(),
-                'product_id' => $id,
-                'quantity' => $quantity
-            ]);
-        }
-
-        return redirect()->back()->with('success', 'Produk masuk keranjang!');
-    }
-
-    // Lihat keranjang
     public function index()
     {
-        $items = Cart::where('user_id', auth()->id())->get();
+        $items = Cart::where('user_id', Auth::id())->with('product')->get();
         return view('cart.index', compact('items'));
     }
 
-    // Hapus item
-    public function remove($id)
+    public function add(Request $request, $productId)
     {
-        Cart::where('id', $id)->delete();
-        return back()->with('success', 'Item dihapus dari keranjang');
-    }
+        $product = Product::findOrFail($productId);
 
-    // Checkout
-    public function checkout()
-    {
-        $items = Cart::where('user_id', auth()->id())->get();
+        $cartItem = Cart::where('user_id', Auth::id())
+            ->where('product_id', $product->id)
+            ->first();
 
-        if ($items->count() == 0) {
-            return back()->with('error', 'Keranjang masih kosong!');
-        }
-
-        // Hitung total harga
-        $total = 0;
-        foreach ($items as $cart) {
-            $total += $cart->product->price * $cart->quantity;
-        }
-
-        $order = Order::create([
-            'user_id' => auth()->id(),
-            'status'  => 'pending',
-            'total'   => $total,
-        ]);
-
-        foreach ($items as $cart) {
-            OrderItem::create([
-                'order_id'  => $order->id,
-                'product_id'=> $cart->product_id,
-                'quantity'  => $cart->quantity,
-                'price'     => $cart->product->price,
+        if ($cartItem) {
+            $cartItem->quantity += $request->input('quantity', 1);
+            $cartItem->save();
+        } else {
+            Cart::create([
+                'user_id' => Auth::id(),
+                'product_id' => $product->id,
+                'quantity' => $request->input('quantity', 1),
             ]);
         }
 
-        Cart::where('user_id', auth()->id())->delete();
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Produk berhasil ditambahkan ke keranjang.'
+            ]);
+        }
 
-        return redirect()->route('orders.index')->with('success', 'Pesanan berhasil dibuat!');
+            return redirect()->back()->with('success', 'Produk berhasil ditambahkan ke keranjang.');
+            }
+
+    public function remove($id)
+    {
+        $cartItem = Cart::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+        $cartItem->delete();
+
+        return redirect()->route('cart.index')->with('success', 'Item dihapus dari keranjang.');
+    }
+
+    public function checkout(Request $request)
+    {
+        $user = auth()->user();
+        $items = Cart::where('user_id', $user->id)->get();
+
+        if ($items->isEmpty()) {
+            return redirect()->route('cart.index')->with('error', 'Keranjang kosong!');
+        }
+
+        // Simpan catatan sementara di session (optional)
+        session(['checkout_note' => $request->note]);
+
+        // Langsung arahkan ke proses simpan pesanan
+        return app(\App\Http\Controllers\OrderController::class)->store($request);
     }
 }

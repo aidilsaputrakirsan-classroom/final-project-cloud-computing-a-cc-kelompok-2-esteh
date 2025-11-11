@@ -13,18 +13,22 @@ class Order extends Model
         'user_id',
         'status',
         'total',
-        'payment_method',
+        'note',
         'payment_status',
-        'transaction_id'
+        'payment_method',
     ];
 
-    // Relasi: satu order memiliki banyak item
+    protected $casts = [
+        'total' => 'float',
+    ];
+
+    // Relasi ke item pesanan
     public function items()
     {
         return $this->hasMany(OrderItem::class);
     }
 
-    // Relasi: order milik user
+    // Relasi ke user
     public function user()
     {
         return $this->belongsTo(User::class);

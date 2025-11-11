@@ -53,12 +53,6 @@
                         <p>Lihat status pesanan pelanggan.</p>
                     </a>
 
-                    <a href="{{ route('admin.users.index') }}" class="menu-card bg-blue-500 text-white p-6 text-center">
-                        <div class="icon-box">👥</div>
-                        <h3 class="font-bold text-xl">Kelola User</h3>
-                        <p>Kelola data pelanggan dan admin.</p>
-                    </a>
-
                     <a href="{{ route('admin.payment-methods.index') }}" class="menu-card bg-purple-500 text-white p-6 text-center">
                         <div class="icon-box">💳</div>
                         <h3 class="font-bold text-xl">Metode Pembayaran</h3>
