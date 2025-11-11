@@ -46,6 +46,16 @@
                                       method="POST" class="flex items-center gap-2">
                                     @csrf
                                     @method('PATCH')
+                                    
+                                    {{-- STATUS PEMBAYARAN --}}
+@php
+    $isPaid = isset($order->payment_status) && $order->payment_status === 'paid';
+@endphp
+
+<span class="px-3 py-1 rounded text-white text-xs
+    {{ $isPaid ? 'bg-green-700' : 'bg-gray-600' }}">
+    {{ $isPaid ? 'Paid' : 'Unpaid' }}
+</span>
 
                                     <select name="status" 
                                         class="border rounded px-2 pr-7 py-1 text-sm"
