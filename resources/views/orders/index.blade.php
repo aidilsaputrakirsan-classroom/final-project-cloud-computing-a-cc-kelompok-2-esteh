@@ -14,7 +14,7 @@
 
     <div class="py-10">
         <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow-md sm:rounded-lg p-6">
+            <div class="bg-gray-100 dark:bg-gray-800 dark:text-gray-200 shadow-md sm:rounded-lg p-6">
 
                 {{-- Jika tidak ada pesanan --}}
                 @if($orders->isEmpty() || $orders->every(fn($o) => $o->items->isEmpty()))
@@ -26,7 +26,7 @@
                     @foreach($orders as $order)
                         @if($order->items->isNotEmpty())
 
-                            <div class="border rounded-lg shadow-sm p-5 mb-6 bg-gray-50">
+                            <div class="border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm p-5 mb-6 bg-gray-50 dark:bg-gray-700 dark:text-gray-200">
                                 <div class="flex justify-between items-center mb-3">
                                     <div>
                                         <h3 class="font-bold text-lg">
@@ -62,7 +62,7 @@
                                 {{-- TABEL ITEM --}}
                                 <table class="w-full text-sm border-collapse">
                                     <thead>
-                                        <tr class="bg-gray-200">
+                                       <tr class="bg-gray-200 dark:bg-gray-600 dark:text-gray-100">
                                             <th class="p-2 border">Produk</th>
                                             <th class="p-2 border">Qty</th>
                                             <th class="p-2 border">Harga Satuan</th>
@@ -123,7 +123,7 @@
                                         @endforeach
 
                                         {{-- TOTAL & TOMBOL BAYAR --}}
-                                        <tr class="bg-gray-100">
+                                        <tr class="bg-gray-100 dark:bg-gray-600 dark:text-gray-100">
                                             <td colspan="3" class="p-2 border font-semibold text-right">Total:</td>
                                             <td class="p-2 border font-bold text-green-700">
                                                 Rp {{ number_format($total, 0, ',', '.') }}

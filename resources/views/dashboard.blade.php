@@ -30,7 +30,7 @@
     <div class="py-10">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
-            <div class="bg-white shadow-sm rounded-lg p-6">
+            <div class="bg-white dark:bg-gray-800 dark:text-gray-200 shadow-sm rounded-lg p-6">
                 <h1 class="text-3xl font-extrabold text-green-700 mb-6">
                     Selamat Datang, {{ auth()->user()->name }}! 👋
                 </h1>
