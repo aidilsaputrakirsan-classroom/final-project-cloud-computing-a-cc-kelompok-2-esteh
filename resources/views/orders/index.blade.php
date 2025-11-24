@@ -107,14 +107,14 @@
 
                                                 <td class="border p-2 text-center">
                                                     @if(!$isPaid && $order->status !== 'success')
-                                                        <form action="{{ route('orders.destroy', $item) }}" method="POST"
-                                                              onsubmit="return confirm('Hapus item ini?')">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button class="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600">
-                                                                Hapus
-                                                            </button>
-                                                        </form>
+                                                        <!-- Perubahan: gunakan data-attributes + tombol pemicu modal (hindari inline JS string-escaping) -->
+                                                        <button type="button"
+                                                                class="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600"
+                                                                data-action="{{ route('orders.destroy', $item) }}"
+                                                                data-name="{{ $item->product->name }} (x{{ $item->quantity }})"
+                                                                onclick="openDeleteModalFromButton(this)">
+                                                            Hapus
+                                                        </button>
                                                     @else
                                                         <span class="text-gray-400 text-xs">Terkunci</span>
                                                     @endif
@@ -151,4 +151,74 @@
             </div>
         </div>
     </div>
+
+    <!-- Delete Confirmation Modal (Kitty) -->
+    <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="w-full max-w-md mx-4">
+            <div class="rounded-lg overflow-hidden shadow-xl">
+                <div class="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-5">
+                    <h2 class="text-lg font-semibold mb-2">Apakah Anda yakin ingin menghapus item ini?</h2>
+                    <p id="deleteModalItem" class="text-sm text-gray-600 dark:text-gray-300 mb-4"></p>
+
+                    <form id="deleteFormModal" method="POST" class="flex justify-end gap-3">
+                        @csrf
+                        @method('DELETE')
+
+                        <!-- tombol 'Tidak' : tulisan hitam, latar putih -->
+                        <button type="button" onclick="closeDeleteModal()"
+                                class="px-4 py-2 rounded border bg-white text-black">
+                            Tidak
+                        </button>
+
+                        <!-- tombol 'Ya' : tulisan hitam, latar merah -->
+                        <button type="submit" class="px-4 py-2 rounded bg-red-500 text-black">
+                            Ya
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // dipanggil oleh tombol Hapus: baca data-* lalu buka modal
+        function openDeleteModalFromButton(btn) {
+            var action = btn.getAttribute('data-action');
+            var name = btn.getAttribute('data-name');
+            openDeleteModal(action, name);
+        }
+
+        function openDeleteModal(actionUrl, itemName) {
+            var modal = document.getElementById('deleteModal');
+            var form = document.getElementById('deleteFormModal');
+            var itemEl = document.getElementById('deleteModalItem');
+
+            form.action = actionUrl;
+            itemEl.textContent = itemName || '';
+
+            modal.classList.remove('hidden');
+
+            // fokus ke tombol 'Tidak' agar keyboard-friendly
+            var cancelBtn = modal.querySelector('button[type="button"]');
+            if (cancelBtn) cancelBtn.focus();
+        }
+
+        function closeDeleteModal() {
+            var modal = document.getElementById('deleteModal');
+            modal.classList.add('hidden');
+        }
+
+        // Close modal on ESC
+        document.addEventListener('keydown', function(e){
+            if (e.key === 'Escape') {
+                var modal = document.getElementById('deleteModal');
+                if (modal && !modal.classList.contains('hidden')) closeDeleteModal();
+            }
+        });
+
+        // Close when clicking outside dialog content
+        document.getElementById('deleteModal').addEventListener('click', function(e){
+            if (e.target === this) closeDeleteModal();
+        });
+    </script>
 </x-app-layout>
