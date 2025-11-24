@@ -39,29 +39,42 @@
                 </p>
 
                 @if(auth()->user()->role === 'admin')
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- GRID UNTUK ADMIN -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
+                    <!-- Kelola Produk -->
                     <a href="{{ route('admin.products.index') }}" class="menu-card bg-green-500 text-white p-6 text-center">
                         <div class="icon-box">🍔</div>
                         <h3 class="font-bold text-xl">Kelola Produk</h3>
                         <p>Tambahkan, edit, dan hapus menu makanan/minuman.</p>
                     </a>
 
+                    <!-- Monitoring Pesanan -->
                     <a href="{{ route('admin.orders.index') }}" class="menu-card bg-yellow-500 text-white p-6 text-center">
                         <div class="icon-box">📦</div>
                         <h3 class="font-bold text-xl">Monitoring Pesanan</h3>
                         <p>Lihat status pesanan pelanggan.</p>
                     </a>
 
+                    <!-- Metode Pembayaran -->
                     <a href="{{ route('admin.payment-methods.index') }}" class="menu-card bg-purple-500 text-white p-6 text-center">
                         <div class="icon-box">💳</div>
                         <h3 class="font-bold text-xl">Metode Pembayaran</h3>
                         <p>Kelola metode pembayaran (DANA, Bank, OVO, dll).</p>
                     </a>
 
+                    <!-- Kelola User (BARU) -->
+                    <a href="{{ route('admin.users.index') }}"
+                        class="menu-card bg-blue-600 text-white p-6 text-center">
+                        <div class="icon-box">👥</div>
+                        <h3 class="font-bold text-xl">Kelola User</h3>
+                        <p>Kelola akun pengguna, role, dan kontrol akses.</p>
+                    </a>
+
                 </div>
 
                 @else
+                <!-- GRID UNTUK USER BIASA -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                     <a href="{{ route('products.menu') }}" class="menu-card bg-green-600 text-white p-6 text-center">
