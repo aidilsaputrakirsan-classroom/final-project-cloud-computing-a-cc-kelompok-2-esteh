@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,9 +10,51 @@
         body {
             background-color: #f5f9f6;
             font-family: 'Poppins', sans-serif;
+            transition: background 0.3s, color 0.3s;
         }
 
-        /* ✅ Navbar Putih */
+        /* 🌙 Mode gelap */
+        .dark-mode {
+            background-color: #121212 !important;
+            color: #e2e2e2 !important;
+        }
+
+        .dark-mode .navbar {
+            background: #1f1f1f !important;
+            border-bottom: 1px solid #333 !important;
+        }
+
+        .dark-mode .navbar-brand span {
+            color: #90ee90 !important;
+        }
+
+        .dark-mode .card {
+            background: #1f1f1f !important;
+            color: #e2e2e2 !important;
+            border: 1px solid #333 !important;
+        }
+
+        .dark-mode footer {
+            background: linear-gradient(90deg, #0a3d0f, #062e0b) !important;
+        }
+
+        /* tombol dark mode */
+        .toggle-dark {
+            border: none;
+            background: #2E7D32;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .toggle-dark:hover {
+            background: #1B5E20;
+        }
+
+        /* Existing styles bawah ini tetap */
         .navbar {
             background: #ffffff !important;
             border-bottom: 1px solid #e0e0e0;
@@ -43,7 +85,6 @@
             background: #2E7D32 !important;
         }
 
-        /* Hero Section */
         .hero {
             background: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80') no-repeat center center;
             background-size: cover;
@@ -71,7 +112,6 @@
             font-weight: 700;
         }
 
-        /* Features */
         .card {
             border: none;
             border-radius: 15px;
@@ -86,19 +126,11 @@
             font-weight: 600;
         }
 
-        /* Animations */
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Footer */
         footer {
             background: linear-gradient(90deg, #388E3C, #1B5E20);
             color: white;
@@ -108,22 +140,28 @@
         }
     </style>
 </head>
+
 <body>
 
-    <!-- ✅ Navbar putih -->
+    <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-light shadow-sm">
         <div class="container">
+
             <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
                 <img src="{{ asset('img/logo.png') }}" alt="Lokalicious">
                 <span class="ms-2">Lokalicious</span>
             </a>
 
+            <!-- tombol hamburger -->
             <button class="navbar-toggler" type="button" onclick="toggleMenu()">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
+            <!-- 🌙 tombol dark mode versi mobile -->
+            <button class="toggle-dark d-lg-none ms-2" onclick="toggleDarkMode()">🌙</button>
+
             <div class="collapse navbar-collapse justify-content-end" id="mainMenu">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav me-3">
                     @if (Route::has('login'))
                         @auth
                             <li class="nav-item">
@@ -147,11 +185,14 @@
                         @endauth
                     @endif
                 </ul>
+
+                <!-- 🌙 tombol dark mode desktop -->
+                <button class="toggle-dark d-none d-lg-inline" onclick="toggleDarkMode()">🌙</button>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- HERO -->
     <section class="hero">
         <div class="hero-content">
             <h1>Selamat Datang di <span style="color:#C8E6C9;">Lokalicious!</span></h1>
@@ -167,7 +208,7 @@
         </div>
     </section>
 
-    <!-- Features -->
+    <!-- FEATURES -->
     <section class="container my-5">
         <div class="row text-center">
             <div class="col-md-4 mb-4">
@@ -177,6 +218,7 @@
                     <p class="card-text">Temukan aneka kuliner lokal yang menggugah selera dan 100% halal.</p>
                 </div>
             </div>
+
             <div class="col-md-4 mb-4">
                 <div class="card p-4 shadow-sm">
                     <img src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png" width="70" class="mx-auto mb-3">
@@ -184,6 +226,7 @@
                     <p class="card-text">Pilih menu favoritmu dan pesan hanya dengan beberapa klik saja!</p>
                 </div>
             </div>
+
             <div class="col-md-4 mb-4">
                 <div class="card p-4 shadow-sm">
                     <img src="https://cdn-icons-png.flaticon.com/512/3649/3649468.png" width="70" class="mx-auto mb-3">
@@ -194,16 +237,20 @@
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- FOOTER -->
     <footer>
         <p>© 2025 Lokalicious. Dibuat dengan ❤️ oleh Tim Pengembang.</p>
     </footer>
 
-    <!-- JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
         function toggleMenu() {
             document.getElementById('mainMenu').classList.toggle('show');
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
         }
     </script>
 

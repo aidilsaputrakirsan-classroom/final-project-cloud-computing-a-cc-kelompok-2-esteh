@@ -44,13 +44,17 @@ Route::middleware(['auth', 'IsAdmin'])
     ->name('admin.')
     ->group(function () {
 
-        // CRUD Produk
+        // === CRUD Produk ===
         Route::resource('products', AdminProductController::class);
 
-        // CRUD Pengguna
+        // === CRUD Pengguna ===
         Route::resource('users', AdminUserController::class);
 
-        // CRUD Pesanan (Admin)
+        // Route khusus untuk halaman index Kelola User
+        Route::get('/kelola-users', [AdminUserController::class, 'index'])
+            ->name('users.kelola');
+
+        // === CRUD Pesanan ===
         Route::resource('orders', AdminOrderController::class);
 
         // Update status order
@@ -63,7 +67,7 @@ Route::middleware(['auth', 'IsAdmin'])
         Route::put('/orders/{order}/edit-payment', [AdminOrderController::class, 'updatePayment'])
             ->name('orders.updatePayment');
 
-        // ✅ CRUD Metode Pembayaran
+        // CRUD Metode Pembayaran
         Route::resource('payment-methods', PaymentMethodController::class)
             ->except(['show']);
     });
@@ -85,7 +89,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
     Route::post('/checkout', [OrderController::class, 'store'])->name('checkout.store');
 
-    // ✅ PEMBAYARAN PESANAN
+    // PEMBAYARAN PESANAN
     Route::get('/orders/{order}/pay', [OrderController::class, 'showPayment'])->name('orders.payment');
     Route::post('/orders/{order}/pay', [OrderController::class, 'processPayment'])->name('orders.payment.process');
 

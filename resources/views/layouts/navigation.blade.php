@@ -68,6 +68,12 @@
                     </div>
                 </div>
 
+                <!-- DARK MODE TOGGLE -->
+                <button id="dark-toggle"
+                    class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 transition">
+                    🌙
+                </button>
+
                 {{-- Settings Dropdown --}}
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
@@ -168,4 +174,20 @@
             </div>
         </div>
     </div>
+
+    <!-- DARK MODE SCRIPT -->
+    <script>
+        // Apply saved theme
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+        }
+
+        const toggle = document.getElementById('dark-toggle');
+
+        toggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+    </script>
 </nav>

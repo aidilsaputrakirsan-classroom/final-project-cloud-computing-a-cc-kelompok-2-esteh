@@ -14,12 +14,12 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 text-gray-900">
+           <div class="bg-gray-100 dark:bg-gray-800 dark:text-gray-200 overflow-hidden shadow-sm sm:rounded-lg p-6">
 
                 @if($products->count() > 0)
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         @foreach($products as $product)
-                            <div class="border rounded shadow hover:shadow-lg transition p-4 flex flex-col">
+                            <div class="border border-gray-300 dark:border-gray-700 rounded shadow hover:shadow-lg transition p-4 flex flex-col bg-gray-50 dark:bg-gray-700 dark:text-gray-200">
 
                                 @if($product->image)
                                     <img src="{{ asset('storage/' . $product->image) }}"
