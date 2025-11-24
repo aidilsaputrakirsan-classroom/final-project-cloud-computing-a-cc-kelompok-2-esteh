@@ -129,14 +129,12 @@
                                 </table>
 
                                 <div class="flex justify-end mt-3">
-                                    <form action="{{ route('admin.orders.destroy', $order) }}" method="POST"
-                                          onsubmit="return confirm('Yakin ingin menghapus pesanan ini beserta itemnya?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm">
-                                            Hapus Pesanan
-                                        </button>
-                                    </form>
+                                    <!-- tombol pemicu modal: menggantikan confirm() bawaan -->
+                                    <button type="button"
+                                            onclick="openDeleteModal('{{ route('admin.orders.destroy', $order) }}', 'Pesanan #{{ $order->id }}')"
+                                            class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm">
+                                        Hapus Pesanan
+                                    </button>
                                 </div>
 
                             @else
@@ -153,5 +151,73 @@
             </div>
         </div>
     </div>
+
+    <!-- Delete Confirmation Modal (Kitty) -->
+    <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
+            <h2 class="text-lg font-semibold mb-3">Apakah Anda yakin ingin menghapus item ini?</h2>
+            <p id="deleteModalItem" class="text-sm text-gray-600 mb-4"></p>
+
+            <form id="deleteFormModal" method="POST">
+                @csrf
+                @method('DELETE')
+                <div class="flex justify-end gap-3">
+                    <!-- tombol 'Tidak' : tulisan hitam, latar putih -->
+                    <button type="button" onclick="closeDeleteModal()" class="px-4 py-2 border rounded bg-white text-black">
+                        Tidak
+                    </button>
+                    <!-- tombol 'Ya' : tulisan hitam, latar merah -->
+                    <button type="submit" class="px-4 py-2 rounded bg-red-500 text-black">
+                        Ya
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * openDeleteModal(actionUrl, itemName)
+         * - actionUrl: URL endpoint DELETE (route('admin.orders.destroy', $order))
+         * - itemName: teks yang ditampilkan di modal (contoh: 'Pesanan #12')
+         *
+         * Catatan: pastikan route admin.orders.destroy menerima method DELETE (seperti semula).
+         */
+        function openDeleteModal(actionUrl, itemName) {
+            var modal = document.getElementById('deleteModal');
+            var form = document.getElementById('deleteFormModal');
+            var itemEl = document.getElementById('deleteModalItem');
+
+            form.action = actionUrl;
+            itemEl.textContent = itemName || '';
+
+            // show modal
+            modal.classList.remove('hidden');
+
+            // fokus ke tombol 'Tidak' agar keyboard-friendly
+            var cancelBtn = modal.querySelector('button[type="button"]');
+            if (cancelBtn) cancelBtn.focus();
+        }
+
+        function closeDeleteModal() {
+            var modal = document.getElementById('deleteModal');
+            modal.classList.add('hidden');
+        }
+
+        // Close modal on ESC
+        document.addEventListener('keydown', function(e){
+            if (e.key === 'Escape') {
+                var modal = document.getElementById('deleteModal');
+                if (modal && !modal.classList.contains('hidden')) closeDeleteModal();
+            }
+        });
+
+        // Optional: close modal when clicking outside dialog content
+        document.getElementById('deleteModal').addEventListener('click', function(e){
+            if (e.target === this) {
+                closeDeleteModal();
+            }
+        });
+    </script>
 
 </x-app-layout>
