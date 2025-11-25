@@ -102,6 +102,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.readAll');
+
+    Route::middleware(['auth'])->group(function () {
+    Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity.logs');
+});
+
 });
 
 // AUTH
