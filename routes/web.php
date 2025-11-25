@@ -12,6 +12,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ActivityLogController; // ← IMPORT CONTROLLER
 
 // =======================
 // HALAMAN AWAL
@@ -50,10 +51,6 @@ Route::middleware(['auth', 'IsAdmin'])
         // === CRUD Pengguna ===
         Route::resource('users', AdminUserController::class);
 
-        // Route khusus untuk halaman index Kelola User
-        Route::get('/kelola-users', [AdminUserController::class, 'index'])
-            ->name('users.kelola');
-
         // === CRUD Pesanan ===
         Route::resource('orders', AdminOrderController::class);
 
@@ -70,7 +67,10 @@ Route::middleware(['auth', 'IsAdmin'])
         // CRUD Metode Pembayaran
         Route::resource('payment-methods', PaymentMethodController::class)
             ->except(['show']);
-    });
+
+        // === Activity Log Admin ===
+        Route::get('/activity-logs', [ActivityLogController::class, 'adminIndex'])->name('admin.activity-logs.index');
+});
 
 // =======================
 // USER AREA
@@ -103,10 +103,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.readAll');
 
-    Route::middleware(['auth'])->group(function () {
-    Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity.logs');
-});
-
+    // === Activity Log User ===
+    Route::get('/activity-logs', [ActivityLogController::class, 'userIndex'])->name('activity-logs.user');
 });
 
 // AUTH

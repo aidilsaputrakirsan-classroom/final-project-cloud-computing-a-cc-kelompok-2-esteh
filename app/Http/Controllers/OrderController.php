@@ -9,10 +9,13 @@ use App\Models\Cart;
 use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Notifications\OrderNotification; // ✅ Tambah
+use App\Notifications\OrderNotification;
+use App\Traits\LogsActivity; // ← Import trait
 
 class OrderController extends Controller
 {
+    use LogsActivity; // ← Gunakan trait
+
     public function index()
     {
         $orders = Order::with(['items.product'])
@@ -58,8 +61,14 @@ class OrderController extends Controller
 
             Cart::where('user_id', $user->id)->delete();
 
-            // ✅ Kirim notifikasi pesanan dibuat
+            // ✅ Notifikasi
             $user->notify(new OrderNotification($order, 'create'));
+
+            // ✅ Catat aktivitas
+            $this->logActivity('create_order', 'User melakukan pemesanan', [
+                'order_id' => $order->id,
+                'total' => $order->total,
+            ]);
         });
 
         return redirect()->route('orders.index')->with('success', 'Pesanan berhasil dibuat!');
@@ -74,8 +83,15 @@ class OrderController extends Controller
         $request->validate(['quantity' => 'required|integer|min:1']);
         $orderItem->update(['quantity' => $request->quantity]);
 
-        // ✅ Notifikasi update
+        // ✅ Notifikasi
         $orderItem->order->user->notify(new OrderNotification($orderItem->order, 'update'));
+
+        // ✅ Catat aktivitas
+        $this->logActivity('update_order_item', 'User mengubah jumlah item pesanan', [
+            'order_id' => $orderItem->order->id,
+            'order_item_id' => $orderItem->id,
+            'new_quantity' => $orderItem->quantity,
+        ]);
 
         return back()->with('success', 'Jumlah item berhasil diperbarui.');
     }
@@ -87,11 +103,16 @@ class OrderController extends Controller
         }
 
         $order = $orderItem->order;
-
         $orderItem->delete();
 
-        // ✅ Notifikasi delete
+        // ✅ Notifikasi
         $order->user->notify(new OrderNotification($order, 'delete'));
+
+        // ✅ Catat aktivitas
+        $this->logActivity('delete_order_item', 'User menghapus item pesanan', [
+            'order_id' => $order->id,
+            'order_item_id' => $orderItem->id,
+        ]);
 
         return back()->with('success', 'Item berhasil dihapus.');
     }
@@ -122,8 +143,15 @@ class OrderController extends Controller
             'payment_status' => 'paid',
         ]);
 
-        // ✅ Notifikasi pembayaran
+        // ✅ Notifikasi
         $order->user->notify(new OrderNotification($order, 'paid'));
+
+        // ✅ Catat aktivitas
+        $this->logActivity('payment', 'User melakukan pembayaran', [
+            'order_id' => $order->id,
+            'amount' => $order->total,
+            'method' => $order->payment_method,
+        ]);
 
         return redirect()->route('orders.index')->with('success', 'Pembayaran berhasil! Menunggu verifikasi admin.');
     }

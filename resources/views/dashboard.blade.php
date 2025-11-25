@@ -63,12 +63,18 @@
                         <p>Kelola metode pembayaran (DANA, Bank, OVO, dll).</p>
                     </a>
 
-                    <!-- Kelola User (BARU) -->
-                    <a href="{{ route('admin.users.index') }}"
-                        class="menu-card bg-blue-600 text-white p-6 text-center">
+                    <!-- Kelola User -->
+                    <a href="{{ route('admin.users.index') }}" class="menu-card bg-blue-600 text-white p-6 text-center">
                         <div class="icon-box">👥</div>
                         <h3 class="font-bold text-xl">Kelola User</h3>
                         <p>Kelola akun pengguna, role, dan kontrol akses.</p>
+                    </a>
+
+                    <!-- Activity Log -->
+                    <a href="{{ route('admin.activity-logs.index') }}" class="menu-card bg-gray-600 text-white p-6 text-center">
+                        <div class="icon-box">📜</div>
+                        <h3 class="font-bold text-xl">Activity Log</h3>
+                        <p>Lihat semua aktivitas user dan admin.</p>
                     </a>
 
                 </div>
@@ -77,16 +83,25 @@
                 <!-- GRID UNTUK USER BIASA -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
+                    <!-- Menu Pesanan -->
                     <a href="{{ route('products.menu') }}" class="menu-card bg-green-600 text-white p-6 text-center">
                         <div class="icon-box">🍽️</div>
                         <h3 class="font-bold text-xl">Pesan Makanan</h3>
                         <p>Lihat menu dan lakukan pemesanan.</p>
                     </a>
 
+                    <!-- Riwayat Pesanan -->
                     <a href="{{ route('orders.index') }}" class="menu-card bg-blue-600 text-white p-6 text-center">
                         <div class="icon-box">🧾</div>
                         <h3 class="font-bold text-xl">Pesanan Saya</h3>
                         <p>Lihat riwayat dan status pesanan kamu.</p>
+                    </a>
+
+                    <!-- Activity Log User -->
+                    <a href="{{ route('activity-logs.user') }}" class="menu-card bg-gray-600 text-white p-6 text-center">
+                        <div class="icon-box">📜</div>
+                        <h3 class="font-bold text-xl">Activity Log</h3>
+                        <p>Lihat aktivitas akunmu sendiri.</p>
                     </a>
 
                 </div>

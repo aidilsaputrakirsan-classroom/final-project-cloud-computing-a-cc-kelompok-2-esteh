@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\ActivityLog; // model untuk activity log
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -15,10 +16,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        // Ambil data user berdasarkan role
+        // Ambil semua user dengan role user atau admin
         $users = User::whereIn('role', ['user', 'admin'])->get();
 
-        // Arahkan ke halaman index user
+        // Redirect ke halaman index user
         return view('admin.users.index', compact('users'));
     }
 
@@ -31,11 +32,11 @@ class UserController extends Controller
     }
 
     /**
-     * Menyimpan user baru ke dalam database.
+     * Menyimpan user baru ke database.
      */
     public function store(Request $request)
     {
-        // Validasi input form
+        // Validasi input dari form
         $request->validate([
             'name'      => 'required|string|max:255',
             'email'     => 'required|email|unique:users,email',
@@ -43,15 +44,22 @@ class UserController extends Controller
             'password'  => 'required|min:6',
         ]);
 
-        // Simpan user baru
-        User::create([
+        // Buat user baru
+        $user = User::create([
             'name'     => $request->name,
             'email'    => $request->email,
             'role'     => $request->role,
-            'password' => Hash::make($request->password), // Enkripsi password
+            'password' => Hash::make($request->password),
         ]);
 
-        // Kembali ke halaman daftar user
+        // Simpan activity log
+        ActivityLog::create([
+            'user_id'     => auth()->id(), // siapa yang melakukan aksi
+            'action'      => 'create',
+            'description' => 'Menambahkan user baru: ' . $user->name,
+            'details'     => json_encode($user),
+        ]);
+
         return redirect()->route('admin.users.index')
                          ->with('success', 'User berhasil ditambahkan!');
     }
@@ -61,7 +69,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        // Cari user berdasarkan id, jika tidak ditemukan maka 404
+        // Cari user, jika tidak ditemukan otomatis 404
         $user = User::findOrFail($id);
 
         return view('admin.users.edit', compact('user'));
@@ -72,29 +80,40 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Cari user berdasarkan id
         $user = User::findOrFail($id);
 
         // Validasi input
         $request->validate([
             'name'      => 'required|string|max:255',
-            'email'     => 'required|email|unique:users,email,' . $user->id, // email boleh sama jika email miliknya sendiri
+            'email'     => 'required|email|unique:users,email,' . $user->id,
             'role'      => 'required|in:user,admin',
-            'password'  => 'nullable|min:6', // password opsional saat update
+            'password'  => 'nullable|min:6',
         ]);
+
+        // Simpan data lama untuk log
+        $oldData = $user->toArray();
 
         // Update data user
         $user->name  = $request->name;
         $user->email = $request->email;
         $user->role  = $request->role;
 
-        // Update password hanya jika ada input baru
         if ($request->password) {
             $user->password = Hash::make($request->password);
         }
 
-        // Simpan perubahan
         $user->save();
+
+        // Catat activity log
+        ActivityLog::create([
+            'user_id'     => auth()->id(),
+            'action'      => 'update',
+            'description' => 'Mengupdate user: ' . $user->name,
+            'details'     => json_encode([
+                'old' => $oldData,
+                'new' => $user->toArray(),
+            ]),
+        ]);
 
         return redirect()->route('admin.users.index')
                          ->with('success', 'User berhasil diperbarui!');
@@ -112,8 +131,18 @@ class UserController extends Controller
             return back()->with('error', 'Kamu tidak bisa menghapus akunmu sendiri.');
         }
 
-        // Hapus user
+        // Simpan data untuk log sebelum dihapus
+        $oldData = $user->toArray();
+
         $user->delete();
+
+        // Catat activity log
+        ActivityLog::create([
+            'user_id'     => auth()->id(),
+            'action'      => 'delete',
+            'description' => 'Menghapus user: ' . $oldData['name'],
+            'details'     => json_encode($oldData),
+        ]);
 
         return back()->with('success', 'User berhasil dihapus.');
     }
