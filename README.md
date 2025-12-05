@@ -1,177 +1,183 @@
-# 📌 SISTEM INFORMASI PEMESANAN MAKANAN - LOKALICIOUS
-Aplikasi pemesanan makanan berbasis web menggunakan Laravel + MySQL
-Dengan panel admin untuk monitoring dan pengelolaan sistem
+# 🍽️ Lokalicious — Web App Pemesanan Kuliner UMKM
 
+Lokalicious adalah aplikasi web yang dikembangkan untuk membantu pelaku UMKM kuliner dalam:
+- Memasarkan produk makanan/minuman
+- Mengelola pesanan pelanggan
+- Mengatur metode pembayaran
+- Mengontrol akses pengguna berdasarkan role
+- Menampilkan laporan pesanan secara ringkas & efisien
 
-# 👥 ROLE PENGGUNA
-1. Admin
-   - Akses penuh untuk mengatur produk, user, pesanan, dan metode pembayaran
-2. User
-   - Melakukan pemesanan makanan, melihat status pesanan, dan melakukan pembayaran
+Aplikasi ini dibangun menggunakan Laravel dan Blade UI yang responsif serta mendukung **Dark Mode**.
 
+---
 
-# 🔐 FITUR AUTENTIKASI
-✔ Login
-✔ Register
-✔ Logout
-✔ Kontrol akses role dengan middleware
+## 📑 Daftar Isi
+- [✨ Fitur Utama](#-fitur-utama)
+- [🛠️ Tech Stack](#️-tech-stack)
+- [📌 Persyaratan Sistem](#-persyaratan-sistem)
+- [⚙️ Instalasi](#️-instalasi)
+- [🔑 Role & Permissions](#-role--permissions)
+- [🎯 Fitur Berdasarkan Role](#-fitur-berdasarkan-role)
+- [🗂️ Struktur Database](#️-struktur-database)
+- [🏛️ Arsitektur Sistem](#️-arsitektur-sistem)
+- [🖼️ Screenshots Website](#️-screenshots-website)
+- [🚀 Deployment](#-deployment)
+- [📄 Lisensi](#-lisensi)
 
------------------------------------------------------------
-# 🔥 Dark Mode
-Tersedia toggle tema (dark & light mode)
-Disimpan pada localStorage agar tetap konsisten saat reload
+---
 
+## ✨ Fitur Utama
 
-# 🍽 FITUR USER (PELANGGAN)
-1️⃣ Lihat daftar menu makanan/minuman  
-2️⃣ Tambah barang ke keranjang  
-3️⃣ Checkout pesanan  
-4️⃣ Pilih metode pembayaran  
-5️⃣ Lihat status pesanan (Pending / Diproses / Selesai)  
+| Fitur | Keterangan |
+|------|------------|
+| Dashboard | Menampilkan ringkasan pesanan dan produk |
+| Login & Register | Autentikasi aman (Laravel Breeze) |
+| Dark Mode | Tema Light/Dark dapat diganti |
+| CRUD Produk | Tambah, edit, dan hapus menu makanan/minuman |
+| Monitoring Pesanan | Daftar pesanan realtime |
+| Update Status Pesanan | Pending → Success → Cancel |
+| Metode Pembayaran | Transfer bank, e-wallet |
+| Kelola User | Admin kelola role & akses pengguna |
+| Pemesanan Makanan | Pelanggan dapat membuat pesanan |
 
-Endpoint utama:
-- /products
-- /cart
-- /orders
+---
 
+## 🛠️ Tech Stack
 
-# 🛠 FITUR ADMIN PANEL
-✔ Dashboard ringkasan data
-✔ Kelola produk
-✔ Kelola user
-✔ Kelola metode pembayaran
-✔ Kelola pesanan (ubah status + hapus)
-
------------------------------------------------------------
-## ➤ Admin - Kelola Produk
-- Tambah menu
-- Edit menu
-- Hapus menu
-- Upload gambar menu
-
-
------------------------------------------------------------
-## ➤ Admin - Monitoring Pesanan
-Admin dapat:
-✔ Melihat daftar pesanan beserta itemnya  
-✔ Ubah status pesanan  
-✔ Hapus pesanan  
-
-Contoh status:
-- pending
-- processing / diproses
-- completed / selesai
-- cancelled
-
-
------------------------------------------------------------
-## ➤ Admin - Kelola User & Role
-Mengatur role:
-- admin
-- user
-
-Admin dapat menghapus user tertentu
-
-
-# 💳 Metode Pembayaran
-Data dikelola oleh admin
-
-Contoh model:
-- transfer_bank
-- ewallet_dana
-- ewallet_ovo
-- cod (cash on delivery)
-
-
-
-# 📊 Dashboard Admin
-Menampilkan informasi penting:
-- Total produk
-- Total pesanan
-- Total user
-- Statistik transaksi terbaru
-
-
-# 🗂 STRUKTUR TABEL PENTING
-
-Tabel users:
-(id, name, email, password, role)
-
-Tabel products:
-(id, name, price, description, image)
-
-Tabel orders:
-(id, user_id, total_price, status, payment_method_id)
-
-Tabel order_items:
-(id, order_id, product_id, quantity, price)
-
-Tabel payment_methods:
-(id, name, code)
-
-
-# ✨ FLOW SISTEM PEMESANAN
-
-User memilih produk ➝ masuk keranjang ➝ checkout ➝  
-User pilih metode pembayaran ➝ pesanan tersimpan ➝  
-Admin cek & ubah status pesanan ➝ pesanan selesai
-
-
-# 💻 TEKNOLOGI YANG DIGUNAKAN
-
-Backend:
+**Backend**
 - Laravel 10
+- PHP 8.2+
+- MySQL 8
 
-Frontend:
+**Frontend**
 - Blade Template
-- TailwindCSS
-- Dark Mode (LocalStorage JS)
+- TailwindCSS (Laravel Breeze)
 
-Database:
+**Libraries/Tools**
+- Laravel Breeze (Auth)
+- Laravel Eloquent ORM
+
+---
+
+## 📌 Persyaratan Sistem
+
+- PHP >= 8.1
+- Composer
+- Node.js & NPM
 - MySQL
+- Local Server (Apache/Nginx)
 
-Auth:
-- Laravel Breeze / UI Auth (disesuaikan)
+---
 
+## ⚙️ Instalasi
 
-# 🚀 Cara Menjalankan Proyek
-
-1️⃣ Clone project
-git clone https://github.com/aidilsaputrakirsan-classroom/final-project-cloud-computing-a-cc-kelompok-2-esteh.git
+```bash
+# Clone repository
+git clone https://github.com/username/lokalicious.git
 cd lokalicious
 
-2️⃣ Install dependencies
+# Install dependencies
 composer install
 npm install
-npm run build
 
-3️⃣ Buat file environment
+# Copy environment config & generate key
 cp .env.example .env
-
-4️⃣ Generate Key
 php artisan key:generate
 
-5️⃣ Migrasi database
+# Konfigurasi database dalam file .env
+# DB_DATABASE=lokalicious
+# DB_USERNAME=root
+# DB_PASSWORD=
+
+# Migrasi database + seeder
 php artisan migrate --seed
 
-6️⃣ Jalankan server
+# Jalankan server dan frontend
+npm run dev
 php artisan serve
+```
 
 
-# 👑 AKUN DEFAULT (contoh)
-Admin:
-email : admin@lokalicious.com
-password : admin123
+## 🔑 Role & Permissions
 
-User:
-email : user@lokalicious.com
-password : user123
+| Role | Akses |
+|------|------|
+| Admin | Kelola user, produk, pesanan, status |
+| User (Pelanggan/UMKM) | Lihat produk, pesan makanan, kelola pesanan pribadi |
 
+---
 
-# 📌 STATUS
-✔ Semua fitur yang diminta sudah selesai
-✔ Sistem siap untuk demo dan pengembangan lebih lanjut
+## 🎯 Fitur Berdasarkan Role
 
+| Fitur | Admin | User |
+|-------|:----:|:---:|
+| Dashboard | ✔ | ✔ |
+| CRUD Produk | ✔ | – |
+| Buat Pesanan | – | ✔ |
+| Edit/Hapus Pesanan sendiri | – | ✔ |
+| Monitoring Pesanan | ✔ | ✔ |
+| Update Status Pesanan | ✔ | – |
+| Kelola User | ✔ | – |
 
+---
 
-**Developed by ESTEH Team for Sistem Informasi Institut Teknologi Kalimantan** *Last updated: November 2025*
+## 🗂️ Struktur Database
+
+**Tabel utama:**
+- users
+- products
+- orders
+- order_items
+- payment_methods
+
+**Relasi:**
+- User **1 — n** Orders
+- Order **1 — n** Order Items
+- Product **1 — n** Order Items
+
+---
+
+## 🏛️ Arsitektur Sistem
+```
+
++----------------+        +-----------------+        +----------------+
+|  Client/Browser| <----> | Laravel Backend | <----> | MySQL Database |
++----------------+        +-----------------+        +----------------+
+         |                          |
+   Blade UI                     Order Logic
+   TailwindCSS               Authentication & CRUD
+```
+---
+
+## 🖼️ Screenshots Website
+
+| Halaman | Tampilan |
+|--------|:------:|
+| Beranda |![Beranda](public/ss/beranda.png)|
+| Login/Register | ![Login Page](public/ss/login.png) |
+| Dashboard (user)| ![](public/ss/dashboard_u.png) |
+| Daftar Produk (user) | ![](public/ss/daftarmakanan_u.png) |
+| Detail Pesanan (user)| ![](public/ss/daftarpesanan_u.png) |
+| Dashboard (admin) | ![](public/ss/dashboard_a.png) |
+| Kelola Produk (admin) | ![](public/ss/kelolaproduk_a.png) |
+| Kelola Pesanan (admin) | ![](public/ss/monitoringpesanan_a.png) |
+| Kelola Metode Pembayaran (admin) | ![](public/ss/metode_a.png) |
+| Kelola User (admin) | ![](public/ss/kelolauser_a.png) |
+---
+
+## 🚀 Deployment
+
+```bash
+composer install --optimize-autoloader --no-dev
+npm run build
+php artisan migrate --force
+
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
+
+## 📄 Lisensi
+
+MIT License
+Dikembangkan untuk Final Project Cloud Computing A-CC Kelompok 2 — Esteh Team 
