@@ -1,59 +1,183 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🍽️ Lokalicious — Web App Pemesanan Kuliner UMKM
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Lokalicious adalah aplikasi web yang dikembangkan untuk membantu pelaku UMKM kuliner dalam:
+- Memasarkan produk makanan/minuman
+- Mengelola pesanan pelanggan
+- Mengatur metode pembayaran
+- Mengontrol akses pengguna berdasarkan role
+- Menampilkan laporan pesanan secara ringkas & efisien
 
-## About Laravel
+Aplikasi ini dibangun menggunakan Laravel dan Blade UI yang responsif serta mendukung **Dark Mode**.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📑 Daftar Isi
+- [✨ Fitur Utama](#-fitur-utama)
+- [🛠️ Tech Stack](#️-tech-stack)
+- [📌 Persyaratan Sistem](#-persyaratan-sistem)
+- [⚙️ Instalasi](#️-instalasi)
+- [🔑 Role & Permissions](#-role--permissions)
+- [🎯 Fitur Berdasarkan Role](#-fitur-berdasarkan-role)
+- [🗂️ Struktur Database](#️-struktur-database)
+- [🏛️ Arsitektur Sistem](#️-arsitektur-sistem)
+- [🖼️ Screenshots Website](#️-screenshots-website)
+- [🚀 Deployment](#-deployment)
+- [📄 Lisensi](#-lisensi)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## ✨ Fitur Utama
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+| Fitur | Keterangan |
+|------|------------|
+| Dashboard | Menampilkan ringkasan pesanan dan produk |
+| Login & Register | Autentikasi aman (Laravel Breeze) |
+| Dark Mode | Tema Light/Dark dapat diganti |
+| CRUD Produk | Tambah, edit, dan hapus menu makanan/minuman |
+| Monitoring Pesanan | Daftar pesanan realtime |
+| Update Status Pesanan | Pending → Success → Cancel |
+| Metode Pembayaran | Transfer bank, e-wallet |
+| Kelola User | Admin kelola role & akses pengguna |
+| Pemesanan Makanan | Pelanggan dapat membuat pesanan |
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## 🛠️ Tech Stack
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+**Backend**
+- Laravel 10
+- PHP 8.2+
+- MySQL 8
 
-### Premium Partners
+**Frontend**
+- Blade Template
+- TailwindCSS (Laravel Breeze)
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+**Libraries/Tools**
+- Laravel Breeze (Auth)
+- Laravel Eloquent ORM
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 📌 Persyaratan Sistem
 
-## Code of Conduct
+- PHP >= 8.1
+- Composer
+- Node.js & NPM
+- MySQL
+- Local Server (Apache/Nginx)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## ⚙️ Instalasi
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+# Clone repository
+git clone https://github.com/username/lokalicious.git
+cd lokalicious
 
-## License
+# Install dependencies
+composer install
+npm install
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Copy environment config & generate key
+cp .env.example .env
+php artisan key:generate
+
+# Konfigurasi database dalam file .env
+# DB_DATABASE=lokalicious
+# DB_USERNAME=root
+# DB_PASSWORD=
+
+# Migrasi database + seeder
+php artisan migrate --seed
+
+# Jalankan server dan frontend
+npm run dev
+php artisan serve
+```
+
+
+## 🔑 Role & Permissions
+
+| Role | Akses |
+|------|------|
+| Admin | Kelola user, produk, pesanan, status |
+| User (Pelanggan/UMKM) | Lihat produk, pesan makanan, kelola pesanan pribadi |
+
+---
+
+## 🎯 Fitur Berdasarkan Role
+
+| Fitur | Admin | User |
+|-------|:----:|:---:|
+| Dashboard | ✔ | ✔ |
+| CRUD Produk | ✔ | – |
+| Buat Pesanan | – | ✔ |
+| Edit/Hapus Pesanan sendiri | – | ✔ |
+| Monitoring Pesanan | ✔ | ✔ |
+| Update Status Pesanan | ✔ | – |
+| Kelola User | ✔ | – |
+
+---
+
+## 🗂️ Struktur Database
+
+**Tabel utama:**
+- users
+- products
+- orders
+- order_items
+- payment_methods
+
+**Relasi:**
+- User **1 — n** Orders
+- Order **1 — n** Order Items
+- Product **1 — n** Order Items
+
+---
+
+## 🏛️ Arsitektur Sistem
+```
+
++----------------+        +-----------------+        +----------------+
+|  Client/Browser| <----> | Laravel Backend | <----> | MySQL Database |
++----------------+        +-----------------+        +----------------+
+         |                          |
+   Blade UI                     Order Logic
+   TailwindCSS               Authentication & CRUD
+```
+---
+
+## 🖼️ Screenshots Website
+
+| Halaman | Tampilan |
+|--------|:------:|
+| Beranda |![Beranda](public/ss/beranda.png)|
+| Login/Register | ![Login Page](public/ss/login.png) |
+| Dashboard (user)| ![](public/ss/dashboard_u.png) |
+| Daftar Produk (user) | ![](public/ss/daftarmakanan_u.png) |
+| Detail Pesanan (user)| ![](public/ss/daftarpesanan_u.png) |
+| Dashboard (admin) | ![](public/ss/dashboard_a.png) |
+| Kelola Produk (admin) | ![](public/ss/kelolaproduk_a.png) |
+| Kelola Pesanan (admin) | ![](public/ss/monitoringpesanan_a.png) |
+| Kelola Metode Pembayaran (admin) | ![](public/ss/metode_a.png) |
+| Kelola User (admin) | ![](public/ss/kelolauser_a.png) |
+---
+
+## 🚀 Deployment
+
+```bash
+composer install --optimize-autoloader --no-dev
+npm run build
+php artisan migrate --force
+
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
+
+## 📄 Lisensi
+
+MIT License
+Dikembangkan untuk Final Project Cloud Computing A-CC Kelompok 2 — Esteh Team 
