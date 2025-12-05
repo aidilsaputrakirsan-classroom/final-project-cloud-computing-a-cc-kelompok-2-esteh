@@ -2,14 +2,14 @@
 Aplikasi pemesanan makanan berbasis web menggunakan Laravel + MySQL
 Dengan panel admin untuk monitoring dan pengelolaan sistem
 
-===========================================================
+
 # 👥 ROLE PENGGUNA
 1. Admin
    - Akses penuh untuk mengatur produk, user, pesanan, dan metode pembayaran
 2. User
    - Melakukan pemesanan makanan, melihat status pesanan, dan melakukan pembayaran
 
-===========================================================
+
 # 🔐 FITUR AUTENTIKASI
 ✔ Login
 ✔ Register
@@ -21,7 +21,7 @@ Dengan panel admin untuk monitoring dan pengelolaan sistem
 Tersedia toggle tema (dark & light mode)
 Disimpan pada localStorage agar tetap konsisten saat reload
 
-===========================================================
+
 # 🍽 FITUR USER (PELANGGAN)
 1️⃣ Lihat daftar menu makanan/minuman  
 2️⃣ Tambah barang ke keranjang  
@@ -34,7 +34,7 @@ Endpoint utama:
 - /cart
 - /orders
 
-===========================================================
+
 # 🛠 FITUR ADMIN PANEL
 ✔ Dashboard ringkasan data
 ✔ Kelola produk
