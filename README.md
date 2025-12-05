@@ -1,59 +1,177 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📌 SISTEM INFORMASI PEMESANAN MAKANAN - LOKALICIOUS
+Aplikasi pemesanan makanan berbasis web menggunakan Laravel + MySQL
+Dengan panel admin untuk monitoring dan pengelolaan sistem
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+===========================================================
+# 👥 ROLE PENGGUNA
+1. Admin
+   - Akses penuh untuk mengatur produk, user, pesanan, dan metode pembayaran
+2. User
+   - Melakukan pemesanan makanan, melihat status pesanan, dan melakukan pembayaran
 
-## About Laravel
+===========================================================
+# 🔐 FITUR AUTENTIKASI
+✔ Login
+✔ Register
+✔ Logout
+✔ Kontrol akses role dengan middleware
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+-----------------------------------------------------------
+# 🔥 Dark Mode
+Tersedia toggle tema (dark & light mode)
+Disimpan pada localStorage agar tetap konsisten saat reload
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+===========================================================
+# 🍽 FITUR USER (PELANGGAN)
+1️⃣ Lihat daftar menu makanan/minuman  
+2️⃣ Tambah barang ke keranjang  
+3️⃣ Checkout pesanan  
+4️⃣ Pilih metode pembayaran  
+5️⃣ Lihat status pesanan (Pending / Diproses / Selesai)  
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Endpoint utama:
+- /products
+- /cart
+- /orders
 
-## Learning Laravel
+===========================================================
+# 🛠 FITUR ADMIN PANEL
+✔ Dashboard ringkasan data
+✔ Kelola produk
+✔ Kelola user
+✔ Kelola metode pembayaran
+✔ Kelola pesanan (ubah status + hapus)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+-----------------------------------------------------------
+## ➤ Admin - Kelola Produk
+- Tambah menu
+- Edit menu
+- Hapus menu
+- Upload gambar menu
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
+-----------------------------------------------------------
+## ➤ Admin - Monitoring Pesanan
+Admin dapat:
+✔ Melihat daftar pesanan beserta itemnya  
+✔ Ubah status pesanan  
+✔ Hapus pesanan  
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Contoh status:
+- pending
+- processing / diproses
+- completed / selesai
+- cancelled
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+-----------------------------------------------------------
+## ➤ Admin - Kelola User & Role
+Mengatur role:
+- admin
+- user
 
-## Contributing
+Admin dapat menghapus user tertentu
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+===========================================================
+# 💳 Metode Pembayaran
+Data dikelola oleh admin
 
-## Code of Conduct
+Contoh model:
+- transfer_bank
+- ewallet_dana
+- ewallet_ovo
+- cod (cash on delivery)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## Security Vulnerabilities
+===========================================================
+# 📊 Dashboard Admin
+Menampilkan informasi penting:
+- Total produk
+- Total pesanan
+- Total user
+- Statistik transaksi terbaru
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+===========================================================
+# 🗂 STRUKTUR TABEL PENTING
 
-## License
+Tabel users:
+(id, name, email, password, role)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Tabel products:
+(id, name, price, description, image)
+
+Tabel orders:
+(id, user_id, total_price, status, payment_method_id)
+
+Tabel order_items:
+(id, order_id, product_id, quantity, price)
+
+Tabel payment_methods:
+(id, name, code)
+
+===========================================================
+# ✨ FLOW SISTEM PEMESANAN
+
+User memilih produk ➝ masuk keranjang ➝ checkout ➝  
+User pilih metode pembayaran ➝ pesanan tersimpan ➝  
+Admin cek & ubah status pesanan ➝ pesanan selesai
+
+===========================================================
+# 💻 TEKNOLOGI YANG DIGUNAKAN
+
+Backend:
+- Laravel 10
+
+Frontend:
+- Blade Template
+- TailwindCSS
+- Dark Mode (LocalStorage JS)
+
+Database:
+- MySQL
+
+Auth:
+- Laravel Breeze / UI Auth (disesuaikan)
+
+===========================================================
+# 🚀 Cara Menjalankan Proyek
+
+1️⃣ Clone project
+git clone https://github.com/aidilsaputrakirsan-classroom/final-project-cloud-computing-a-cc-kelompok-2-esteh.git
+cd lokalicious
+
+2️⃣ Install dependencies
+composer install
+npm install
+npm run build
+
+3️⃣ Buat file environment
+cp .env.example .env
+
+4️⃣ Generate Key
+php artisan key:generate
+
+5️⃣ Migrasi database
+php artisan migrate --seed
+
+6️⃣ Jalankan server
+php artisan serve
+
+===========================================================
+# 👑 AKUN DEFAULT (contoh)
+Admin:
+email : admin@lokalicious.com
+password : admin123
+
+User:
+email : user@lokalicious.com
+password : user123
+
+===========================================================
+# 📌 STATUS
+✔ Semua fitur yang diminta sudah selesai
+✔ Sistem siap untuk demo dan pengembangan lebih lanjut
+
+===========================================================
+
+**Developed by ESTEH Team for Sistem Informasi Institut Teknologi Kalimantan** *Last updated: November 2025*
