@@ -72,7 +72,7 @@ Mengatur role:
 
 Admin dapat menghapus user tertentu
 
-===========================================================
+
 # 💳 Metode Pembayaran
 Data dikelola oleh admin
 
@@ -83,7 +83,7 @@ Contoh model:
 - cod (cash on delivery)
 
 
-===========================================================
+
 # 📊 Dashboard Admin
 Menampilkan informasi penting:
 - Total produk
@@ -91,7 +91,7 @@ Menampilkan informasi penting:
 - Total user
 - Statistik transaksi terbaru
 
-===========================================================
+
 # 🗂 STRUKTUR TABEL PENTING
 
 Tabel users:
@@ -109,14 +109,14 @@ Tabel order_items:
 Tabel payment_methods:
 (id, name, code)
 
-===========================================================
+
 # ✨ FLOW SISTEM PEMESANAN
 
 User memilih produk ➝ masuk keranjang ➝ checkout ➝  
 User pilih metode pembayaran ➝ pesanan tersimpan ➝  
 Admin cek & ubah status pesanan ➝ pesanan selesai
 
-===========================================================
+
 # 💻 TEKNOLOGI YANG DIGUNAKAN
 
 Backend:
@@ -133,7 +133,7 @@ Database:
 Auth:
 - Laravel Breeze / UI Auth (disesuaikan)
 
-===========================================================
+
 # 🚀 Cara Menjalankan Proyek
 
 1️⃣ Clone project
@@ -157,7 +157,7 @@ php artisan migrate --seed
 6️⃣ Jalankan server
 php artisan serve
 
-===========================================================
+
 # 👑 AKUN DEFAULT (contoh)
 Admin:
 email : admin@lokalicious.com
@@ -167,11 +167,11 @@ User:
 email : user@lokalicious.com
 password : user123
 
-===========================================================
+
 # 📌 STATUS
 ✔ Semua fitur yang diminta sudah selesai
 ✔ Sistem siap untuk demo dan pengembangan lebih lanjut
 
-===========================================================
+
 
 **Developed by ESTEH Team for Sistem Informasi Institut Teknologi Kalimantan** *Last updated: November 2025*
